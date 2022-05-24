@@ -1,18 +1,7 @@
-# FormKit Vue Starter Project
+# FormKit MultiStep Plugin
 
-This template should help get you started using FormKit with Vue 3 and Vite.
-The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup)
-to learn more.
+This is a plugin for creating schema-based multi-step forms with FormKit. It is based
+off the discussion and examples described in [this](https://github.com/formkit/formkit/issues/63) FormKit issue.
 
-## Installation from Github
+More details to follow.
 
-Please follow the [instructions in the FormKit documentation](https://docs.formkit.com/essentials/installation) to install from Github.
-## Local Development
-
-Once FormKit is installed, your setup is complete you can install and start your dev! The
-`@formkit/vue` package is already added to the `package.json` file for this project.
-
-```bash
-npm install
-npm run dev
-```
