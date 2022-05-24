@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TODO some of this is unnecessary */
+
+:root {
+    --gray: #ccccd7;
+    --gray-l: #eeeef4;
+}
+  
+.formkit-form {
+    max-width: 500px;
+    flex-shrink: 0;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    background: #fff;
+    color: #000;
+    border: 1px solid var(--gray);
+    border-radius: 0.5em;
+    box-shadow: 0.25em 0.25em 1em 0 rgba(0,0,0,0.1);
+}
+  
+#app .source-content {
+    padding: 2em;
+    background: transparent;
+}
+  
+.steps {
+    list-style-type: none;
+    margin: 0;
+    display: flex;
+    padding-left: 0;
+    background: var(--gray-l);
+    border-radius: 0.4em 0.4em 0 0;
+    overflow: hidden;
+    border-bottom: 1px solid var(--gray);
+}
+  
+.step {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--gray-l);
+    border-right: 1px solid var(--gray);
+    color: gray;
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+}
+  
+.step:last-child {
+    box-shadow: 0.1em -0.1 0.1em 0 rgba(0,0,0,0.33)
+}
+  
+.step:hover { cursor: pointer; }
+  
+[data-step-active="true"] {
+    color: black;
+    background: white !important;
+    border-bottom: none;
+    position: relative;
+}
+  
+.step--errors,
+[data-step-valid="true"]:after {
+    content: 'âœ“';
+    background-color: #54A085;
+    position: absolute;
+    top: 4px; right: 4px;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    z-index: 10;
+    display: flex;
+    font-size: 10px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+  
+.step--errors {
+    background-color: #ff4949;
+    color: #fff;
+    z-index: 100;
+}
+  
+.step-nav {
+    display: flex;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    justify-content: space-between;
+}
+  
+.form-body {
+    padding: 2em;
+}
+  
+.next { margin-left: auto;}
+  
+.formkit-outer[data-type="submit"] .formkit-wrapper {
+    padding: 0 2em 1em 2em;
+    display: flex;
+}
+  
+.formkit-outer[data-type="submit"] .formkit-input {
+    margin-left: auto;
+    margin-right: 0;
+}
+  
+details {
+    border: 1px solid var(--gray);
+    background: var(--gray-l);
+    border-radius: .15em;
+    padding: 1em;
+}
+  
+.formkit-form > .formkit-messages {
+    padding: 0 2em 0em 2em;
+}
+.formkit-form > .formkit-messages:last-child {
+    padding: 0 2em 2em 2em;
+}
+  
+[data-errors="true"] .formkit-label { color: #ff4949; }
+.formkit-wrapper { max-width: 100%; }
+button:hover, summary { cursor: pointer }
+p { max-width: 600px;}
+p small { color: #999; }
+h1 { margin: .25em 0; max-width: 600px;}
+  
+@media (max-width: 438px) {
+    h1 { font-size: 1.15em; }
+    #app .source-content {
+      padding: 0.5em;
+    }
+    .steps {
+      flex-direction: column;
+    }
+    .step {
+      border-bottom: 1px solid var(--gray);
+      border-right: none;
+    }
+    .step:last-child {
+      border-bottom: none;
+    }
+    .form-body {
+      padding: 1em;
+    }
+    .formkit-outer[data-type="submit"] .formkit-wrapper {
+      padding: 0 1em 1em 1em;
+      display: flex;
+    }
+    .formkit-form > .formkit-messages {
+      padding: 0 1em 0em 1em;
+    }
+    .formkit-form > .formkit-messages:last-child {
+      padding: 0 1em 1em 1em;
+    }
+}
