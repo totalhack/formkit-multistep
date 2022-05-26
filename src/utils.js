@@ -1,5 +1,5 @@
 const postJSON = async (url, data) => {
-  console.log("Posting to " + url)
+  console.debug("Posting to " + url)
   const rawResponse = await fetch(url, {
     method: 'POST',
     headers: {
@@ -9,14 +9,14 @@ const postJSON = async (url, data) => {
     body: JSON.stringify(data)
   });
   const res = await rawResponse.json();
-  console.log("POST response:" + JSON.stringify(res, null, 2));
+  console.debug("POST response:" + JSON.stringify(res, null, 2));
   return res
 }
 
 
 const redirect = (url) => {
   // similar behavior as clicking on a link, maintains back button
-  console.log('redirect to ' + url)
+  console.debug('redirect to ' + url)
   window.location.href = url
 }
 

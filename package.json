@@ -1,6 +1,6 @@
 {
   "name": "formkit-multistep",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "publishConfig": {
     "access": "public"
   },
@@ -29,7 +29,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "pub": "vite build && npm publish",
+    "patch": "npm version patch --force --commit-hooks false",
+    "patchpub": "vite build && npm version patch --force --commit-hooks false && npm publish"
   },
   "dependencies": {
     "@formkit/tailwindcss": "^1.0.0-beta.8",

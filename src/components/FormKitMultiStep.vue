@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 const mergedData = reactive(Object.assign({}, dataDefaults, props.data));  // shallow merge
-console.log("FormKitSchema data:", mergedData)
+console.debug("FormKitSchema data:", mergedData)
 </script>
 
 <script>
@@ -40,14 +40,13 @@ const dataDefaults = {
     setPreviousStep()
   },
   setStep: (nextStep, validate) => () => {
-    console.log("setStep:", nextStep, validate)
+    console.debug("setStep:", nextStep, validate)
     setStep({ nextStep, validate })
   },
   setStepOrder: target => () => {
     setStepOrder(target)
   },
   redirect: target => () => {
-    console.log("Calling redirect with url " + target)
     redirect('https://www.google.com')
   },
   log: target => () => {
