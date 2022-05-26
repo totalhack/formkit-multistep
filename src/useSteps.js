@@ -10,7 +10,7 @@ export default function useSteps() {
   const setStepOrder = (order) => {
     // TODO verify valid steps
     stepOrder.value = order
-    console.log("new stepOrder", order)
+    console.log('new stepOrder', order)
   }
 
   const firstStep = () => {
@@ -23,6 +23,7 @@ export default function useSteps() {
   }
 
   const currentIndex = () => {
+    console.log('currentIndex of', activeStep.value, 'is', stepOrder.value.indexOf(activeStep.value))
     return stepOrder.value.indexOf(activeStep.value)
   }
 
@@ -42,7 +43,7 @@ export default function useSteps() {
     console.log("activeStep", activeStep.value, "nextStep", nextStep, "validate", validate)
     if (validate) {
       const currentStep = activeStep.value;
-      console.log("validating ", currentStep)
+      console.log('validating', currentStep)
       const node = steps[currentStep].node
       node.walk((n) => {
         n.store.set(
@@ -81,6 +82,7 @@ export default function useSteps() {
 
   const stepPlugin = (node) => {
     if (node.props.type == "group") {
+      console.log('Adding step node', node)
       // builds an object of the top-level groups
       steps[node.name] = steps[node.name] || {}
       steps[node.name].node = node;
