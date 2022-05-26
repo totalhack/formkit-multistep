@@ -1,5 +1,5 @@
 import { reactive, toRef, ref } from 'vue'
-import { getNode, createMessage } from '@formkit/core'
+import { createMessage } from '@formkit/core'
 
 export default function useSteps() {
   const activeStep = ref('')
@@ -43,8 +43,7 @@ export default function useSteps() {
     if (validate) {
       const currentStep = activeStep.value;
       console.log("validating ", currentStep)
-      const node = getNode(currentStep)
-      console.log(currentStep, node)
+      const node = steps[currentStep].node
       node.walk((n) => {
         n.store.set(
           createMessage({
@@ -84,6 +83,7 @@ export default function useSteps() {
     if (node.props.type == "group") {
       // builds an object of the top-level groups
       steps[node.name] = steps[node.name] || {}
+      steps[node.name].node = node;
 
       // Maintain a default order, can be overwritten to change flow
       if (defaultOrder.length > 0) {
