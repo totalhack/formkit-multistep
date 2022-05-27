@@ -19,13 +19,31 @@ import useSteps from '../useSteps.js'
 import { postJSON, redirect, strSubUrl } from '../utils.js'
 
 let { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
+let prepopValues = {}
+
+const prepopPlugin = (node) => {
+  if (node.props.type == "form") {
+    prepopValues = node.props.attrs.prepop || {}
+    return true
+  }
+
+  if (node.props.type == "group") {
+    return true
+  }
+
+  if (prepopValues[node.name]) {
+    console.debug('Setting prepop value for:', node.name, prepopValues[node.name])
+    node.input(prepopValues[node.name])
+  }
+}
 
 const dataDefaults = {
   steps,
   stepOrder,
   activeStep,
   plugins: [
-    stepPlugin
+    stepPlugin,
+    prepopPlugin,
   ],
   firstStep: () => {
     return firstStep()

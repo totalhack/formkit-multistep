@@ -81,12 +81,8 @@ const formNavigation = () => ({
 })
 
 const formDetails = () => ({
-  $el: 'details',
+  $el: 'pre',
   children: [
-    {
-      $el: 'summary',
-      children: 'Form data'
-    },
     {
       $el: 'pre',
       children: '$stringify( $get(form).value )'

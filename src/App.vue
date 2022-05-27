@@ -12,6 +12,10 @@ const data = {
     console.log("mySubmit")
     alert("Submit override: " + JSON.stringify(formData, null, 2))
   },
+  prepop: {
+    zip_code: "12345",
+    date: "2022-05-01"
+  }
 }
 
 const schema = [
@@ -25,6 +29,7 @@ const schema = [
       // onSubmit: '$mySubmit',
       plugins: '$plugins',
       actions: false,
+      prepop: '$prepop'
     },
     children: [
       {

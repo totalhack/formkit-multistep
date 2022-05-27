@@ -27,7 +27,7 @@ const phone = () => ({
 const date = () => ({
   $formkit: 'date',
   label: 'Date',
-  name: 'date_inc',
+  name: 'date',
   validation: 'required'
 })
 
