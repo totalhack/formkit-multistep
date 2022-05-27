@@ -81,6 +81,13 @@ export default function useSteps() {
   }
 
   const stepPlugin = (node) => {
+    if (node.props.type == "form") {
+      if (node.props.attrs.defaultOrder) {
+        defaultOrder.push(...node.props.attrs.defaultOrder)
+      }
+      return true
+    }
+
     if (node.props.type == "group") {
       console.debug('Adding step node', node)
       // builds an object of the top-level groups

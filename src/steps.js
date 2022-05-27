@@ -4,6 +4,7 @@ import { fullName, email, phone, date, zipcode, consent } from './inputs'
 
 const dateAndZip = () => ({
   $el: 'section',
+  if: '$stepIsEnabled("dateAndZip")',
   attrs: {
     style: {
       if: '$activeStep !== "dateAndZip"',
@@ -25,6 +26,7 @@ const dateAndZip = () => ({
 
 const contactInfo = () => ({
   $el: 'section',
+  if: '$stepIsEnabled("contactInfo")',
   attrs: {
     style: {
       if: '$activeStep !== "contactInfo"',

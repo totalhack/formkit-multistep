@@ -29,7 +29,8 @@ const schema = [
       // onSubmit: '$mySubmit',
       plugins: '$plugins',
       actions: false,
-      prepop: '$prepop'
+      prepop: '$prepop',
+      defaultOrder: ['dateAndZip']
     },
     children: [
       {

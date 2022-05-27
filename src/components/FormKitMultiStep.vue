@@ -23,7 +23,7 @@ let prepopValues = {}
 
 const prepopPlugin = (node) => {
   if (node.props.type == "form") {
-    prepopValues = node.props.attrs.prepop || {}
+    prepopValues = node.props.attrs.prepop || prepopValues
     return true
   }
 
@@ -74,6 +74,10 @@ const dataDefaults = {
     return steps[stepName].valid && steps[stepName].errorCount === 0
   },
   stepIsEnabled: stepName => {
+    if (!stepOrder.value.length) {
+      // HACK: assume its init time. Need a better way.
+      return true
+    }
     return stepOrder.value.indexOf(stepName) > -1
   },
   submit: (postUrl, redirectUrl = null) => async (formData, node) => {
