@@ -19,11 +19,12 @@ import useSteps from '../useSteps.js'
 import { postJSON, redirect, strSubUrl } from '../utils.js'
 
 let { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
-let prepopValues = {}
+let prepopSettings = {}
+const urlParams = new URLSearchParams(window.location.search);
 
 const prepopPlugin = (node) => {
   if (node.props.type == "form") {
-    prepopValues = node.props.attrs.prepop || prepopValues
+    prepopSettings = node.props.attrs.prepop || prepopSettings
     return true
   }
 
@@ -31,9 +32,18 @@ const prepopPlugin = (node) => {
     return true
   }
 
-  if (prepopValues[node.name]) {
-    console.debug('Setting prepop value for:', node.name, prepopValues[node.name])
-    node.input(prepopValues[node.name])
+  if (prepopSettings) {
+    let value
+    if (prepopSettings.values) {
+      value = prepopSettings.values[node.name]
+    }
+    if (prepopSettings.fromURL && urlParams.has(node.name)) {
+      value = urlParams.get(node.name)
+    }
+    if (value) {
+      console.debug('Setting prepop value for:', node.name, value)
+      node.input(value)
+    }
   }
 }
 

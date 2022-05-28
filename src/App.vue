@@ -13,8 +13,10 @@ const data = {
     alert("Submit override: " + JSON.stringify(formData, null, 2))
   },
   prepop: {
-    zip_code: "12345",
-    date: "2022-05-01"
+    fromURL: true,
+    values: {
+      zip_code: "12345",
+    }
   }
 }
 
@@ -30,21 +32,21 @@ const schema = [
       plugins: '$plugins',
       actions: false,
       prepop: '$prepop',
-      defaultOrder: ['dateAndZip']
+      // defaultOrder: ['dateAndZip']
     },
     children: [
       {
         $el: 'h1',
         children: 'Need Help? Start Here!',
         attrs: {
-          class: 'flex justify-center text-3xl font-bold'
+          class: 'text-center text-3xl font-bold'
         }
       },
       {
         $el: 'h3',
         children: 'Get Your Questions Answered Today!',
         attrs: {
-          class: 'flex justify-center text-l font-bold text-blue-500'
+          class: 'text-center text-l font-bold text-blue-500'
         }
       },
       {

@@ -1,12 +1,3 @@
-
-const fullName = () => ({
-  $formkit: 'text',
-  name: 'full_name',
-  label: 'Full Name',
-  placeholder: 'First Last',
-  validation: 'required'
-})
-
 const email = () => ({
   $formkit: 'email',
   name: 'email',
@@ -20,8 +11,8 @@ const phone = () => ({
   name: 'tel',
   label: 'Telephone',
   placeholder: 'xxx-xxx-xxxx',
-  help: 'Phone number must be in the xxx-xxx-xxxx format.',
-  validation: 'required|matches:/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/'
+  help: '10-digit US phone number, hyphens optional.',
+  validation: 'required|matches:/^[0-9]{3}-?[0-9]{3}-?[0-9]{4}$/'
 })
 
 const date = () => ({
@@ -52,4 +43,4 @@ const consent = () => ({
   }
 })
 
-export { fullName, email, phone, date, zipcode, consent }
+export { email, phone, date, zipcode, consent }

@@ -1,5 +1,5 @@
 
-import { fullName, email, phone, date, zipcode, consent } from './inputs'
+import { email, phone, date, zipcode, consent } from './inputs'
 
 
 const dateAndZip = () => ({
@@ -59,7 +59,7 @@ const formNavigation = () => ({
       children: 'Previous Step',
       style: {
         if: '$activeStep === $firstStep()',
-        then: 'display: none;'
+        then: 'visibility: hidden;'
       }
     },
     {
@@ -74,6 +74,7 @@ const formNavigation = () => ({
     {
       $formkit: 'submit',
       label: 'Submit Application',
+      if: '$activeStep === $lastStep()',
       style: {
         if: '$activeStep !== $lastStep()',
         then: 'display: none;'

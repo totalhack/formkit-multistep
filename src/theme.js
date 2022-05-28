@@ -2,7 +2,7 @@
 // many input types are identical in how
 // we want to style them.
 const textClassification = {
-  label: 'block mb-1 font-bold text-sm formkit-invalid:text-red-500',
+  label: 'block mb-1 font-bold text-sm text-left formkit-invalid:text-red-500',
   inner: `
     max-w-md
     border

@@ -101,7 +101,7 @@
 .next { margin-left: auto;}
   
 .formkit-outer[data-type="submit"] .formkit-wrapper {
-    padding: 0 2em 1em 2em;
+    /* padding: 0 2em 1em 2em; */
     display: flex;
 }
   
