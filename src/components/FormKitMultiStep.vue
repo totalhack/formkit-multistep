@@ -21,6 +21,7 @@ import { postJSON, redirect, flattenObj, strSubUrl } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
+const urlParams = new URLSearchParams(window.location.search);
 
 const dataDefaults = {
   steps,
@@ -30,6 +31,9 @@ const dataDefaults = {
     stepPlugin,
     prepopPlugin,
   ],
+  urlParam: (name, backup = null) => {
+    return urlParams.get(name) || backup
+  },
   firstStep: () => {
     return firstStep()
   },

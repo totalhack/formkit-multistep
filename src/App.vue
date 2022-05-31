@@ -36,7 +36,7 @@ const schema = [
     children: [
       {
         $el: 'h1',
-        children: 'Need Help? Start Here!',
+        children: '$urlParam("pitch", "Need Help") + "? Start Here!"',
         attrs: {
           class: 'text-center text-3xl font-bold'
         }
