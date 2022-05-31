@@ -1,4 +1,4 @@
-const postJSON = async (url, data) => {
+export const postJSON = async (url, data) => {
   console.debug("Posting to " + url)
   const rawResponse = await fetch(url, {
     method: 'POST',
@@ -13,22 +13,39 @@ const postJSON = async (url, data) => {
   return res
 }
 
-
-const redirect = (url) => {
+export const redirect = (url) => {
   // similar behavior as clicking on a link, maintains back button
   console.debug('redirect to ' + url)
   window.location.href = url
 }
 
-const getKey = (d, path) => {
+export const flattenObj = (obj) => {
+  const flattened = {}
+
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key]
+
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      Object.assign(flattened, flattenObj(value))
+    } else {
+      flattened[key] = value
+    }
+  })
+
+  return flattened
+}
+
+export const getKey = (d, path) => {
   if (typeof (path) === 'string') {
     path = path.split('.')
   }
   return path.reduce((x, y) => x[y], d)
 }
 
-const strSub = (str, obj) => str.replace(/\${(.*?)}/g, (x, g) => getKey(obj, g));
+export const strSub = (str, obj) => str.replace(/\${(.*?)}/g, (x, g) => getKey(obj, g));
 
-const strSubUrl = (str, obj) => str.replace(/\${(.*?)}/g, (x, g) => encodeURIComponent(getKey(obj, g)));
+export const strSubUrl = (str, obj) => str.replace(/\${(.*?)}/g, (x, g) => encodeURIComponent(getKey(obj, g)));
 
-export { postJSON, redirect, getKey, strSub, strSubUrl }
+export function merge() {
+  return Object.assign({}, ...arguments)
+}

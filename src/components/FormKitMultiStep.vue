@@ -17,7 +17,7 @@ console.debug("FormKitSchema data:", mergedData)
 <script>
 import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
-import { postJSON, redirect, strSubUrl } from '../utils.js'
+import { postJSON, redirect, flattenObj, strSubUrl } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
@@ -43,33 +43,28 @@ const dataDefaults = {
     setPreviousStep()
   },
   setStep: (nextStep, validate) => () => {
-    console.debug("setStep:", nextStep, validate)
     setStep({ nextStep, validate })
   },
   setStepOrder: target => () => {
     setStepOrder(target)
-  },
-  redirect: target => () => {
-    redirect('https://www.google.com')
-  },
-  log: target => () => {
-    console.log('target:', target)
   },
   stepIsValid: stepName => {
     return steps[stepName].valid && steps[stepName].errorCount === 0
   },
   stepIsEnabled: stepName => {
     if (!stepOrder.value.length) {
-      // HACK: assume its init time. Need a better way.
+      // HACK: assume it's init time and always return true
       return true
     }
     return stepOrder.value.indexOf(stepName) > -1
   },
-  submit: (postUrl, redirectUrl = null) => async (formData, node) => {
+  submit: (postUrl, redirectUrl = null, flatten = false) => async (formData, node) => {
+    if (flatten) {
+      formData = flattenObj(formData)
+    }
     try {
       const res = await postJSON(postUrl, formData)
       node.clearErrors()
-      alert('Submitted successfully!')
     } catch (err) {
       console.error(err);
       node.setErrors(err.formErrors, err.fieldErrors)

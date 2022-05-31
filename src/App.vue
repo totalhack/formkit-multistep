@@ -5,7 +5,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { FormKitMultiStep } from './components/';
-import { dateAndZip, contactInfo, formNavigation, formDetails } from './steps.js'
+import { categoryAndZip, subcategory, contactInfo, formNavigation, formDetails } from './steps.js'
 
 const data = {
   mySubmit: async (formData, node) => {
@@ -26,13 +26,12 @@ const schema = [
     props: {
       type: 'form',
       id: 'form',
-      onSubmit: '$submit("https://httpbin.org/post")',
-      // onSubmit: '$submit("https://httpbin.org/post", "https://www.google.com?x=${subid}")',
-      // onSubmit: '$mySubmit',
+      // onSubmit: '$submit("https://httpbin.org/post", "https://www.google.com?x=${subid}", true)',
+      onSubmit: '$mySubmit',
       plugins: '$plugins',
       actions: false,
       prepop: '$prepop',
-      // defaultOrder: ['dateAndZip']
+      // defaultOrder: ['categoryAndZip']
     },
     children: [
       {
@@ -60,7 +59,8 @@ const schema = [
           class: 'form-body'
         },
         children: [
-          dateAndZip(),
+          categoryAndZip(),
+          subcategory(),
           contactInfo(),
           formNavigation(),
           formDetails(),

@@ -1,53 +1,70 @@
+import { merge } from './utils.js';
+import * as inp from './inputs.js';
 
-import { email, phone, date, zipcode, consent } from './inputs'
-
-
-const dateAndZip = () => ({
+const stepDefaults = (step) => ({
   $el: 'section',
-  if: '$stepIsEnabled("dateAndZip")',
+  if: '$stepIsEnabled("' + step + '")',
   attrs: {
     style: {
-      if: '$activeStep !== "dateAndZip"',
+      if: '$activeStep !== "' + step + '"',
       then: 'display: none;'
     }
-  },
-  children: [
-    {
-      $formkit: 'group',
-      id: 'dateAndZip',
-      name: 'dateAndZip',
-      children: [
-        zipcode(),
-        date(),
-      ]
-    }
-  ]
+  }
 })
 
-const contactInfo = () => ({
-  $el: 'section',
-  if: '$stepIsEnabled("contactInfo")',
-  attrs: {
-    style: {
-      if: '$activeStep !== "contactInfo"',
-      then: 'display: none;'
-    }
-  },
-  children: [
+function step(name, inputs, ...args) {
+  return merge(
+    stepDefaults(name),
     {
-      $formkit: 'group',
-      id: 'contactInfo',
-      name: 'contactInfo',
       children: [
-        email(),
-        phone(),
-        consent()
-      ]
-    }
-  ]
-})
+        {
+          $formkit: 'group',
+          id: name,
+          name: name,
+          children: inputs
+        }
+      ],
+    },
+    ...args
+  )
+}
 
-const formNavigation = () => ({
+export function categoryAndZip() {
+  return step(
+    'categoryAndZip',
+    [
+      inp.zipcode(),
+      inp.category(),
+    ],
+    ...arguments
+  )
+}
+
+
+export function subcategory() {
+  return step(
+    'subcategory',
+    [
+      inp.fruitQuestions(),
+      inp.vegetableQuestions()
+    ],
+    ...arguments
+  )
+}
+
+export function contactInfo() {
+  return step(
+    'contactInfo',
+    [
+      inp.email(),
+      inp.phone(),
+      inp.consent()
+    ],
+    ...arguments
+  )
+}
+
+export const formNavigation = () => ({
   $el: 'div',
   attrs: {
     class: 'step-nav'
@@ -83,7 +100,7 @@ const formNavigation = () => ({
   ]
 })
 
-const formDetails = () => ({
+export const formDetails = () => ({
   $el: 'pre',
   children: [
     {
@@ -101,4 +118,3 @@ const formDetails = () => ({
   ]
 })
 
-export { contactInfo, formNavigation, formDetails, dateAndZip }
