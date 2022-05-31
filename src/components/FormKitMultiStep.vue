@@ -15,37 +15,12 @@ console.debug("FormKitSchema data:", mergedData)
 </script>
 
 <script>
+import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
 import { postJSON, redirect, strSubUrl } from '../utils.js'
 
+let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
-let prepopSettings = {}
-const urlParams = new URLSearchParams(window.location.search);
-
-const prepopPlugin = (node) => {
-  if (node.props.type == "form") {
-    prepopSettings = node.props.attrs.prepop || prepopSettings
-    return true
-  }
-
-  if (node.props.type == "group") {
-    return true
-  }
-
-  if (prepopSettings) {
-    let value
-    if (prepopSettings.values) {
-      value = prepopSettings.values[node.name]
-    }
-    if (prepopSettings.fromURL && urlParams.has(node.name)) {
-      value = urlParams.get(node.name)
-    }
-    if (value) {
-      console.debug('Setting prepop value for:', node.name, value)
-      node.input(value)
-    }
-  }
-}
 
 const dataDefaults = {
   steps,
