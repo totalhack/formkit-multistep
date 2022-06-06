@@ -80,7 +80,7 @@ export const email = () => ({
 
 export const phone = () => ({
   $formkit: 'tel',
-  name: 'tel',
+  name: 'phone',
   label: 'Telephone',
   placeholder: 'xxx-xxx-xxxx',
   help: '10-digit US phone number, hyphens optional.',

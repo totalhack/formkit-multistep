@@ -19,22 +19,6 @@ export const redirect = (url) => {
   window.location.href = url
 }
 
-export const flattenObj = (obj) => {
-  const flattened = {}
-
-  Object.keys(obj).forEach((key) => {
-    const value = obj[key]
-
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      Object.assign(flattened, flattenObj(value))
-    } else {
-      flattened[key] = value
-    }
-  })
-
-  return flattened
-}
-
 export const getKey = (d, path) => {
   if (typeof (path) === 'string') {
     path = path.split('.')

@@ -7,11 +7,28 @@ import { reactive } from 'vue'
 import { FormKitMultiStep } from './components/';
 import { categoryAndZip, subcategory, contactInfo, formNavigation, formDetails } from './steps.js'
 
+const flattenObj = (obj) => {
+  const flattened = {}
+
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key]
+
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      Object.assign(flattened, flattenObj(value))
+    } else {
+      flattened[key] = value
+    }
+  })
+
+  return flattened
+}
+
 const data = {
   mySubmit: async (formData, node) => {
     console.log("mySubmit")
     alert("Submit override: " + JSON.stringify(formData, null, 2))
   },
+  flattenObj: flattenObj,
   prepop: {
     fromURL: true,
     values: {
@@ -26,8 +43,9 @@ const schema = [
     props: {
       type: 'form',
       id: 'form',
-      // onSubmit: '$submit("https://httpbin.org/post", "https://www.google.com?x=${subid}", true)',
-      onSubmit: '$mySubmit',
+      // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, "https://www.google.com?x=${subid}")',
+      onSubmit: '$submit("https://httpbin.org/post", $flattenObj)',
+      // onSubmit: '$mySubmit',
       plugins: '$plugins',
       actions: false,
       prepop: '$prepop',
