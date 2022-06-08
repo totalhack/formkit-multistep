@@ -45,6 +45,7 @@ const schema = [
       id: 'form',
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, "https://www.google.com?x=${subid}")',
       onSubmit: '$submit("https://httpbin.org/post", $flattenObj)',
+      // onSubmit: '$submit("https://httpbin.org/status/500", $flattenObj)',
       // onSubmit: '$mySubmit',
       plugins: '$plugins',
       actions: false,

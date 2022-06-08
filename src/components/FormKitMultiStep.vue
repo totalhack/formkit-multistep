@@ -73,8 +73,7 @@ const dataDefaults = {
       const res = await postJSON(postUrl, formData)
       node.clearErrors()
     } catch (err) {
-      console.error(err);
-      node.setErrors(err.formErrors, err.fieldErrors)
+      node.setErrors(err.toString())
     }
     if (redirectUrl && redirectUrl !== 'null') {
       if (formData) {

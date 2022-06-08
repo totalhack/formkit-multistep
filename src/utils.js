@@ -8,6 +8,9 @@ export const postJSON = async (url, data) => {
     },
     body: JSON.stringify(data)
   });
+  if (!rawResponse.ok) {
+    throw Error(rawResponse.statusText);
+  }
   const res = await rawResponse.json();
   console.debug("POST response:" + JSON.stringify(res, null, 2));
   return res
@@ -15,7 +18,6 @@ export const postJSON = async (url, data) => {
 
 export const redirect = (url) => {
   // similar behavior as clicking on a link, maintains back button
-  console.debug('redirect to ' + url)
   window.location.href = url
 }
 
