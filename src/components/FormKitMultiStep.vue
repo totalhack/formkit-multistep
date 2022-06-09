@@ -10,7 +10,16 @@ const props = defineProps({
   schema: Object
 });
 
-const mergedData = reactive(Object.assign({}, dataDefaults, props.data));  // shallow merge
+const meta = {}
+for (var node of props.schema) {
+  if (!node.type || node.type !== 'meta') {
+    continue
+  }
+  Object.assign(meta, node.data || {})
+}
+
+// shallow merge
+const mergedData = reactive(Object.assign({}, dataDefaults, { meta }, props.data));
 console.debug("FormKitSchema data:", mergedData)
 </script>
 

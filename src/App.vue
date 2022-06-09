@@ -39,6 +39,12 @@ const data = {
 
 const schema = [
   {
+    type: 'meta',
+    data: {
+      someTestField: "Hey you can access this elsewhere as $meta.someTestField"
+    }
+  },
+  {
     $cmp: 'FormKit',
     props: {
       type: 'form',
