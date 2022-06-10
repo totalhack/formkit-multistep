@@ -51,11 +51,19 @@ const schema = [
       id: 'form',
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, "https://www.google.com?x=${subid}")',
       onSubmit: '$submit("https://httpbin.org/post", $flattenObj)',
+      // onSubmit: '$submit("https://httpbin.org/status/403", $flattenObj)',
+      // onSubmit: '$submit("https://httpbin.org/status/409", $flattenObj,  "https://www.google.com?x=${subid}")',
+      // onSubmit: '$submit("https://httpbin.org/status/429", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/500", $flattenObj)',
       // onSubmit: '$mySubmit',
       plugins: '$plugins',
       actions: false,
       prepop: '$prepop',
+      errorCodes: {
+        403: { message: "An Error Occurred - Forbidden" },
+        409: { abort: false },
+        429: "An Error Occurred - Rate Limit Exceeded"
+      }
       // defaultOrder: ['categoryAndZip']
     },
     children: [

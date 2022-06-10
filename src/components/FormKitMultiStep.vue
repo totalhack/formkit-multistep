@@ -26,7 +26,7 @@ console.debug("FormKitSchema data:", mergedData)
 <script>
 import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
-import { postJSON, redirect, strSubUrl } from '../utils.js'
+import { postJSON, redirect, strSubUrl, handleSubmitError } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
@@ -78,12 +78,18 @@ const dataDefaults = {
       }
       formData = prepData(formData)
     }
+    let abort = false;
     try {
       const res = await postJSON(postUrl, formData)
       node.clearErrors()
     } catch (err) {
-      node.setErrors(err.toString())
+      abort = handleSubmitError(err, formData, node)
     }
+
+    if (abort) {
+      return
+    }
+
     if (redirectUrl && redirectUrl !== 'null') {
       if (formData) {
         redirectUrl = strSubUrl(redirectUrl, formData)
