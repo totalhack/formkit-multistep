@@ -63,7 +63,11 @@ const schema = [
         403: { message: "An Error Occurred - Forbidden" },
         409: { abort: false },
         429: "An Error Occurred - Rate Limit Exceeded"
-      }
+      },
+      inputMap: {
+        'Fruits': ['favoriteFruit'],
+        'Vegetables': ['favoriteVegetable']
+      },
       // defaultOrder: ['categoryAndZip']
     },
     children: [

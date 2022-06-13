@@ -71,6 +71,16 @@ const dataDefaults = {
     }
     return stepOrder.value.indexOf(stepName) > -1
   },
+  inputIsEnabled: (node, key, inputName) => {
+    if (!node || !key || !node.attrs.inputMap) {
+      return true
+    }
+    const inputMap = node.attrs.inputMap
+    if (inputMap[key].indexOf(inputName) < 0) {
+      return false
+    }
+    return true
+  },
   submit: (postUrl, prepData = null, redirectUrl = null) => async (formData, node) => {
     if (prepData && prepData != 'null') {
       if (!(prepData instanceof Function)) {

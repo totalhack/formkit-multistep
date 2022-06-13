@@ -52,16 +52,33 @@ export function contactInfo() {
   )
 }
 
+// export function subcategory() {
+//   return step(
+//     'subcategory',
+//     [
+//       inp.fruitQuestions(),
+//       inp.vegetableQuestions()
+//     ],
+//     ...arguments
+//   )
+// }
+
+// TEST: attempting inputs on top level - still seems to hit bug
+
 export function subcategory() {
   return step(
     'subcategory',
     [
-      inp.fruitQuestions(),
-      inp.vegetableQuestions()
+      inp.pickyEater(),
+      inp.favoriteFruit(),
+      inp.favoriteVegetable(),
+      inp.foodSource()
     ],
     ...arguments
   )
 }
+
+// ------ Utility Steps
 
 export const formNavigation = () => ({
   $el: 'div',
