@@ -58,6 +58,7 @@ export const foodSource = () => select({
 export const favoriteFruit = () => select({
   label: 'Favorite Fruit',
   name: 'favoriteFruit',
+  id: 'favoriteFruit',
   if: '$inputIsEnabled($get(form), $get(category).value, "favoriteFruit")',
   options: [
     'Apples',
@@ -69,6 +70,7 @@ export const favoriteFruit = () => select({
 export const favoriteVegetable = () => select({
   label: 'Favorite Vegetable',
   name: 'favoriteVegetable',
+  id: 'favoriteVegetable',
   if: '$inputIsEnabled($get(form), $get(category).value, "favoriteVegetable")',
   options: [
     'Broccoli',
