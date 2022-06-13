@@ -105,15 +105,27 @@ export const formDetails = () => ({
   children: [
     {
       $el: 'pre',
-      children: '$stringify( $get(form).value )'
+      children: '$stringify( $get(form).value )',
+      attrs: {
+        class: 'text-xs',
+        style: 'overflow: scroll'
+      }
     },
     {
       $el: 'pre',
-      children: ['activeStep: ', '$activeStep']
+      children: ['activeStep: ', '$activeStep'],
+      attrs: {
+        class: 'text-xs',
+        style: 'overflow: scroll'
+      }
     },
     {
       $el: 'pre',
-      children: ['stepOrder: ', '$stepOrder']
+      children: ['stepOrder: ', '$stepOrder'],
+      attrs: {
+        class: 'text-xs',
+        style: 'overflow: scroll'
+      }
     }
   ]
 })

@@ -102,4 +102,5 @@ const schema = [
     ]
   }
 ]
+console.log("Schema:", JSON.stringify(schema, null, 2))
 </script>

@@ -1,20 +1,63 @@
-export const category = () => ({
-  $formkit: 'select',
+import { merge } from './utils.js';
+
+// ------ Common Base Settings
+
+const yesnoradio = (updates) => {
+  return merge({
+    $formkit: 'radio',
+    validation: 'required',
+    validationMessages: {
+      required: 'Field is required',
+    },
+    optionsClass: 'pt-3 pl-1',
+    options: [
+      'Yes',
+      'No'
+    ]
+  }, updates)
+}
+
+const select = (updates) => {
+  return merge({
+    $formkit: 'select',
+    placeholder: "Please Select",
+    validation: 'required',
+    validationMessages: {
+      required: 'Field is required',
+    },
+  }, updates)
+}
+
+// ------ Inputs
+
+export const category = () => select({
   label: 'Category',
   name: 'category',
   id: 'category',
-  validation: 'required',
   options: [
     'Fruits',
     'Vegetables'
   ]
 })
 
-export const favoriteFruit = () => ({
-  $formkit: 'select',
+export const pickyEater = () => yesnoradio({
+  name: 'picky_eater',
+  label: 'Are You a Picky Eater?',
+})
+
+export const foodSource = () => select({
+  label: 'How Do You Source Your Food?',
+  name: 'foodSource',
+  options: [
+    'Grow',
+    'Buy',
+    'Replicator'
+  ]
+})
+
+export const favoriteFruit = () => select({
   label: 'Favorite Fruit',
   name: 'favoriteFruit',
-  validation: 'required',
   options: [
     'Apples',
     'Bananas',
@@ -22,32 +65,14 @@ export const favoriteFruit = () => ({
   ]
 })
 
-export const favoriteVegetable = () => ({
-  $formkit: 'select',
+export const favoriteVegetable = () => select({
   label: 'Favorite Vegetable',
   name: 'favoriteVegetable',
-  validation: 'required',
   options: [
     'Broccoli',
     'Corn',
     'Carrots'
   ]
-})
-
-export const fruitQuestions = () => ({
-  $formkit: 'group',
-  id: 'fruitQuestions',
-  name: 'fruitQuestions',
-  if: '$get(category).value == "Fruits"',
-  children: [favoriteFruit()]
-})
-
-export const vegetableQuestions = () => ({
-  $formkit: 'group',
-  id: 'vegetableQuestions',
-  name: 'vegetableQuestions',
-  if: '$get(category).value == "Vegetables"',
-  children: [favoriteVegetable()]
 })
 
 export const consent = () => ({
@@ -95,3 +120,20 @@ export const zipcode = () => ({
   validation: 'required|matches:/^[0-9]{5}$/'
 })
 
+// ------ Question Groups
+
+export const fruitQuestions = () => ({
+  $formkit: 'group',
+  id: 'fruitQuestions',
+  name: 'fruitQuestions',
+  if: '$get(category).value == "Fruits"',
+  children: [pickyEater(), favoriteFruit(), foodSource()]
+})
+
+export const vegetableQuestions = () => ({
+  $formkit: 'group',
+  id: 'vegetableQuestions',
+  name: 'vegetableQuestions',
+  if: '$get(category).value == "Vegetables"',
+  children: [pickyEater(), favoriteVegetable(), foodSource()]
+})
