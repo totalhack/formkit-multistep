@@ -40,18 +40,6 @@ export function categoryAndZip() {
   )
 }
 
-
-export function subcategory() {
-  return step(
-    'subcategory',
-    [
-      inp.fruitQuestions(),
-      inp.vegetableQuestions()
-    ],
-    ...arguments
-  )
-}
-
 export function contactInfo() {
   return step(
     'contactInfo',
@@ -59,6 +47,17 @@ export function contactInfo() {
       inp.email(),
       inp.phone(),
       inp.consent()
+    ],
+    ...arguments
+  )
+}
+
+export function subcategory() {
+  return step(
+    'subcategory',
+    [
+      inp.fruitQuestions(),
+      inp.vegetableQuestions()
     ],
     ...arguments
   )
