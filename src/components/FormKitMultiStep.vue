@@ -29,13 +29,14 @@ import useSteps from '../useSteps.js'
 import { postJSON, redirect, strSubUrl, handleSubmitError } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
-let { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
+let { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
 const urlParams = new URLSearchParams(window.location.search);
 
 const dataDefaults = {
   steps,
-  stepOrder,
   activeStep,
+  stepHistory,
+  stepQueue,
   plugins: [
     stepPlugin,
     prepopPlugin,
@@ -58,18 +59,15 @@ const dataDefaults = {
   setStep: (nextStep, validate) => () => {
     setStep({ nextStep, validate })
   },
-  setStepOrder: target => () => {
-    setStepOrder(target)
-  },
   stepIsValid: stepName => {
     return steps[stepName].valid && steps[stepName].errorCount === 0
   },
   stepIsEnabled: stepName => {
-    if (!stepOrder.value.length) {
+    if (!enabledSteps().length) {
       // HACK: assume it's init time and always return true
       return true
     }
-    return stepOrder.value.indexOf(stepName) > -1
+    return enabledSteps().indexOf(stepName) > -1
   },
   inputIsEnabled: (node, key, inputName) => {
     if (!node || !key || !node.attrs.inputMap) {

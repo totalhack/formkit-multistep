@@ -36,12 +36,13 @@ export const category = () => select({
   id: 'category',
   options: [
     'Fruits',
-    'Vegetables'
+    'Vegetables',
+    'Neither'
   ]
 })
 
 export const pickyEater = () => yesnoradio({
-  name: 'picky_eater',
+  name: 'pickyEater',
   label: 'Are You a Picky Eater?',
 })
 

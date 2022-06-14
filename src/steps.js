@@ -12,20 +12,21 @@ const stepDefaults = (step) => ({
   }
 })
 
+// ...args get merged onto the group since the 'section' node basically
+// disappears in the formkit hierarchy
 function step(name, inputs, ...args) {
   return merge(
     stepDefaults(name),
     {
       children: [
-        {
+        merge({
           $formkit: 'group',
           id: name,
           name: name,
           children: inputs
-        }
+        }, ...args)
       ],
-    },
-    ...args
+    }
   )
 }
 
@@ -122,7 +123,15 @@ export const formDetails = () => ({
     },
     {
       $el: 'pre',
-      children: ['stepOrder: ', '$stepOrder'],
+      children: ['stepHistory: ', '$stepHistory'],
+      attrs: {
+        class: 'text-xs',
+        style: 'overflow: scroll'
+      }
+    },
+    {
+      $el: 'pre',
+      children: ['stepQueue: ', '$stepQueue'],
       attrs: {
         class: 'text-xs',
         style: 'overflow: scroll'

@@ -5,46 +5,84 @@ export default function useSteps() {
   const activeStep = ref('')
   const steps = reactive({})
   let defaultOrder = [];
-  let stepOrder = ref([])
+  let stepQueue = ref([])
+  let stepHistory = ref([])
 
-  const setStepOrder = (order) => {
-    // TODO verify valid steps
-    stepOrder.value = order
-    console.debug('new stepOrder', order)
+  const lastItem = (x) => {
+    return x.value[x.value.length - 1]
   }
 
   const firstStep = () => {
-    const stepNames = Object.keys(steps)
-    return stepNames[0];
+    if (stepHistory.value.length > 0) {
+      return stepHistory.value[0]
+    }
+    return stepQueue.value[0]
   }
 
   const lastStep = () => {
-    return stepOrder.value[stepOrder.value.length - 1]
-  }
-
-  const currentIndex = () => {
-    console.debug('currentIndex of', activeStep.value, 'is', stepOrder.value.indexOf(activeStep.value))
-    return stepOrder.value.indexOf(activeStep.value)
-  }
-
-  const setStepIndex = (index) => {
-    activeStep.value = stepOrder.value[index]
-  }
-
-  const setStepName = (name) => {
-    const index = stepOrder.value.indexOf(name)
-    if (index < 0) {
-      throw Error('Invalid step name ' + name)
+    if (stepQueue.value.length > 0) {
+      return lastItem(stepQueue)
     }
-    activeStep.value = stepOrder.value[index];
+    return lastItem(stepHistory)
+  }
+
+  const enabledSteps = () => {
+    return [...stepHistory.value, ...stepQueue.value]
+  }
+
+  const setStepQueue = (value) => {
+    stepQueue.value = [...value]
+  }
+
+  const queueStep = (stepName, next = false) => {
+    if (next == true) {
+      stepQueue.value.unshift(stepName)
+    } else {
+      stepQueue.value.push(stepName)
+    }
+  }
+
+  const advanceStep = (stepCount) => {
+    if (stepCount == 1) {
+      const done = stepQueue.value.shift()
+      stepHistory.value.push(done)
+      activeStep.value = stepQueue.value[0]
+    } else if (stepCount == -1) {
+      const undone = stepHistory.value.pop()
+      queueStep(undone, true)
+      activeStep.value = undone
+    } else {
+      throw Error('Invalid stepCount: ' + JSON.stringify(stepCount))
+    }
+  }
+
+  const getNextStepsFromMap = (node, nextStepMap) => {
+    let nextSteps = null;
+    for (var input of Object.keys(node.value)) {
+      const value = node.value[input]
+      if (nextStepMap[input] && nextStepMap[input][value]) {
+        if (nextSteps !== null) {
+          throw Error('Multiple matches in nextStepMap')
+        }
+        nextSteps = nextStepMap[input][value]
+        break
+      }
+    }
+    if (nextSteps === null) {
+      if ('*' in nextStepMap) {
+        // '*' is special case placeholder for defaults
+        return nextStepMap['*']
+      }
+      throw Error('nextSteps not found in nextStepMap, no default specified')
+    }
+
+    return nextSteps
   }
 
   const setStep = ({ nextStep = 1, validate = true } = {}) => {
-    console.debug("activeStep", activeStep.value, "nextStep", nextStep, "validate", validate)
+    const node = steps[activeStep.value].node
+
     if (validate) {
-      const currentStep = activeStep.value;
-      console.debug('validating', currentStep)
-      const node = steps[currentStep].node
       node.walk((n) => {
         n.store.set(
           createMessage({
@@ -59,25 +97,26 @@ export default function useSteps() {
       }
     }
 
-    // TODO behavior if invalid step name?
-    if (nextStep instanceof Function) {
-      const nextStep = nextStepFunc()
-      setStepName(nextStep)
-    } else if (typeof (nextStep) === 'string') {
-      setStepName(nextStep)
-    } else if (typeof (nextStep) === 'number') {
-      setStepIndex(nextStep)
+    if (node.props.attrs.nextStepMap) {
+      const nextSteps = getNextStepsFromMap(node, node.props.attrs.nextStepMap)
+      if (nextSteps) {
+        setStepQueue([activeStep.value, ...nextSteps])
+      }
+    }
+
+    if (typeof (nextStep) === 'number') {
+      advanceStep(nextStep)
     } else {
       throw Error("Unexpected value for nextStep: " + nextStep)
     }
   }
 
   const setNextStep = () => {
-    setStep({ nextStep: currentIndex() + 1 })
+    setStep({ nextStep: 1 })
   }
 
   const setPreviousStep = () => {
-    setStep({ nextStep: currentIndex() - 1, validate: false })
+    setStep({ nextStep: -1, validate: false })
   }
 
   const stepPlugin = (node) => {
@@ -89,23 +128,21 @@ export default function useSteps() {
     }
 
     if (node.props.type == "group") {
-      console.debug('Adding step node', node)
       // builds an object of the top-level groups
       steps[node.name] = steps[node.name] || {}
       steps[node.name].node = node;
 
       // Maintain a default order, can be overwritten to change flow
-      // NOTE: this feature needs more thuoght/testing
       if (defaultOrder.length > 0) {
-        if (stepOrder.value.length === 0) {
-          stepOrder.value = defaultOrder
+        if (stepQueue.value.length === 0) {
+          setStepQueue(defaultOrder)
         }
       } else {
-        stepOrder.value.push(node.name)
+        queueStep(node.name)
       }
 
+      // use 'on created' to ensure context object is available
       node.on('created', () => {
-        // use 'on created' to ensure context object is available
         steps[node.name].valid = toRef(node.context.state, 'valid')
       })
 
@@ -129,5 +166,5 @@ export default function useSteps() {
     }
   }
 
-  return { stepPlugin, steps, stepOrder, defaultOrder, setStepOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep }
+  return { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setStepQueue, setNextStep, setPreviousStep }
 }

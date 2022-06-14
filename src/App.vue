@@ -65,10 +65,11 @@ const schema = [
         429: "An Error Occurred - Rate Limit Exceeded"
       },
       inputMap: {
+        // Can be used to dynamically control inputs by some key
+        // Ex: if: '$inputIsEnabled($get(form), $get(category).value, "favoriteVegetable")',
         'Fruits': ['favoriteFruit'],
         'Vegetables': ['favoriteVegetable']
       },
-      // defaultOrder: ['categoryAndZip']
     },
     children: [
       {
@@ -96,7 +97,14 @@ const schema = [
           class: 'form-body'
         },
         children: [
-          categoryAndZip(),
+          categoryAndZip({
+            nextStepMap: {
+              'category': {
+                'Neither': ['contactInfo'],
+              },
+              '*': ['subcategory', 'contactInfo']
+            }
+          }),
           subcategory(),
           contactInfo(),
           formNavigation(),
