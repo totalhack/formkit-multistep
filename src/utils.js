@@ -24,29 +24,30 @@ export const redirect = (url) => {
 }
 
 export const handleSubmitError = (err, node) => {
-  const code = err.response.status;
-  if (node.props.attrs.errorCodes && code in node.props.attrs.errorCodes) {
-    const value = node.props.attrs.errorCodes[code]
-    let message = null
-    let abort = true
+  if (err.response) {
+    const code = err.response.status;
+    if (node.props.attrs.errorCodes && code in node.props.attrs.errorCodes) {
+      const value = node.props.attrs.errorCodes[code]
+      let message = null
+      let abort = true
 
-    if (typeof (value) === 'string') {
-      message = value
-    } else {
-      if ('message' in value) {
-        message = value.message
+      if (typeof (value) === 'string') {
+        message = value
+      } else {
+        if ('message' in value) {
+          message = value.message
+        }
+        if ('abort' in value) {
+          abort = value.abort
+        }
       }
-      if ('abort' in value) {
-        abort = value.abort
-      }
-    }
 
-    if (message) {
-      node.setErrors(message)
+      if (message) {
+        node.setErrors(message)
+      }
+      return abort
     }
-    return abort
   }
-
   node.setErrors(err.toString())
   return true // abort by default
 }

@@ -111,18 +111,20 @@ export default function useSteps() {
     }
 
     if (node.props.type == "group") {
-      // builds an object of the top-level groups
-      steps[node.name] = steps[node.name] || {}
-      steps[node.name].node = node;
-
       // Maintain a default order, can be overwritten to change flow
       if (defaultOrder.length > 0) {
-        if (stepQueue.value.length === 0) {
+        if (Object.keys(steps).length === 0) {
           setStepQueue(defaultOrder)
         }
       } else {
-        queueStep(node.name)
+        if (!(node.name in steps)) { // Make sure not called on node reinit
+          queueStep(node.name)
+        }
       }
+
+      // builds an object of the top-level groups
+      steps[node.name] = steps[node.name] || {}
+      steps[node.name].node = node;
 
       // use 'on created' to ensure context object is available
       node.on('created', () => {
