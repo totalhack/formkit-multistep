@@ -1,5 +1,7 @@
 import { reactive, toRef, ref } from 'vue'
 import { createMessage } from '@formkit/core'
+import { keyValOverlap } from './utils.js'
+
 
 export default function useSteps() {
   const activeStep = ref('')
@@ -57,26 +59,7 @@ export default function useSteps() {
   }
 
   const getNextStepsFromMap = (node, nextStepMap) => {
-    let nextSteps = null;
-    for (var input of Object.keys(node.value)) {
-      const value = node.value[input]
-      if (nextStepMap[input] && nextStepMap[input][value]) {
-        if (nextSteps !== null) {
-          throw Error('Multiple matches in nextStepMap')
-        }
-        nextSteps = nextStepMap[input][value]
-        break
-      }
-    }
-    if (nextSteps === null) {
-      if ('*' in nextStepMap) {
-        // '*' is special case placeholder for defaults
-        return nextStepMap['*']
-      }
-      throw Error('nextSteps not found in nextStepMap, no default specified')
-    }
-
-    return nextSteps
+    return keyValOverlap(node.value, nextStepMap, false)
   }
 
   const setStep = ({ nextStep = 1, validate = true } = {}) => {

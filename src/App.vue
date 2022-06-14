@@ -50,7 +50,8 @@ const schema = [
       type: 'form',
       id: 'form',
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, "https://www.google.com?x=${subid}")',
-      onSubmit: '$submit("https://httpbin.org/post", $flattenObj)',
+      // onSubmit: '$submit("https://httpbin.org/post", $flattenObj)',
+      onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $getRedirect)',
       // onSubmit: '$submit("https://httpbin.org/status/403", $flattenObj)',
       // onSubmit: '$submit("https://httpbin.org/status/409", $flattenObj,  "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/429", $flattenObj, "https://www.google.com?x=${subid}")',
@@ -70,6 +71,12 @@ const schema = [
         'Fruits': ['favoriteFruit'],
         'Vegetables': ['favoriteVegetable']
       },
+      redirectMap: {
+        'category': {
+          'Neither': 'https://www.google.com?x=${subid}&y=1',
+        },
+        '*': null
+      }
     },
     children: [
       {

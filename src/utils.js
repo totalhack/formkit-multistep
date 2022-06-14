@@ -23,7 +23,7 @@ export const redirect = (url) => {
   window.location.href = url
 }
 
-export const handleSubmitError = (err, formData, node) => {
+export const handleSubmitError = (err, node) => {
   const code = err.response.status;
   if (node.props.attrs.errorCodes && code in node.props.attrs.errorCodes) {
     const value = node.props.attrs.errorCodes[code]
@@ -51,6 +51,27 @@ export const handleSubmitError = (err, formData, node) => {
   return true // abort by default
 }
 
+// Helper to map form values over various input maps
+export const keyValOverlap = (o1, o2, multiple = true) => {
+  let result = null;
+  for (var input of Object.keys(o1)) {
+    const value = o1[input]
+    if (o2[input] && o2[input][value]) {
+      if (result !== null && !multiple) {
+        throw Error('Multiple values not allowed')
+      }
+      result = o2[input][value]
+      break
+    }
+  }
+  if (result === null) {
+    if ('*' in o2) {
+      return o2['*'] // '*' is special placeholder for defaults
+    }
+    throw Error('result not found and no default specified')
+  }
+  return result
+}
 
 export const getKey = (d, path) => {
   if (typeof (path) === 'string') {

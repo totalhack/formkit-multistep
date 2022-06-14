@@ -26,7 +26,7 @@ console.debug("FormKitSchema data:", mergedData)
 <script>
 import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
-import { postJSON, redirect, strSubUrl, handleSubmitError } from '../utils.js'
+import { postJSON, redirect, strSubUrl, handleSubmitError, keyValOverlap } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
@@ -78,6 +78,12 @@ const dataDefaults = {
     }
     return true
   },
+  getRedirect: (formData, node) => {
+    if (!node || !node.props.attrs.redirectMap) {
+      return
+    }
+    return keyValOverlap(formData, node.props.attrs.redirectMap, false)
+  },
   submit: (postUrl, prepData = null, redirectUrl = null) => async (formData, node) => {
     if (prepData && prepData != 'null') {
       if (!(prepData instanceof Function)) {
@@ -90,13 +96,16 @@ const dataDefaults = {
       const res = await postJSON(postUrl, formData)
       node.clearErrors()
     } catch (err) {
-      abort = handleSubmitError(err, formData, node)
+      abort = handleSubmitError(err, node)
     }
 
     if (abort) {
       return
     }
 
+    if (redirectUrl instanceof Function) {
+      redirectUrl = redirectUrl(formData, node)
+    }
     if (redirectUrl && redirectUrl !== 'null') {
       if (formData) {
         redirectUrl = strSubUrl(redirectUrl, formData)
