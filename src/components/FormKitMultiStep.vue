@@ -75,8 +75,7 @@ const dataDefaults = {
     if (!node || !key || !node.attrs.inputMap) {
       return true
     }
-    const inputMap = node.attrs.inputMap
-    if (inputMap[key].indexOf(inputName) < 0) {
+    if (node.attrs.inputMap[key].indexOf(inputName) < 0) {
       return false
     }
     return true

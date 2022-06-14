@@ -95,6 +95,7 @@ export default function useSteps() {
       steps[node.name].node = node;
 
       // Maintain a default order, can be overwritten to change flow
+      // NOTE: this feature needs more thuoght/testing
       if (defaultOrder.length > 0) {
         if (stepOrder.value.length === 0) {
           stepOrder.value = defaultOrder

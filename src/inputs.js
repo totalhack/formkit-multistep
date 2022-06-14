@@ -59,7 +59,7 @@ export const favoriteFruit = () => select({
   label: 'Favorite Fruit',
   name: 'favoriteFruit',
   id: 'favoriteFruit',
-  if: '$inputIsEnabled($get(form), $get(category).value, "favoriteFruit")',
+  // if: '$inputIsEnabled($get(form), $get(category).value, "favoriteFruit")',
   options: [
     'Apples',
     'Bananas',
@@ -71,7 +71,7 @@ export const favoriteVegetable = () => select({
   label: 'Favorite Vegetable',
   name: 'favoriteVegetable',
   id: 'favoriteVegetable',
-  if: '$inputIsEnabled($get(form), $get(category).value, "favoriteVegetable")',
+  // if: '$inputIsEnabled($get(form), $get(category).value, "favoriteVegetable")',
   options: [
     'Broccoli',
     'Corn',
@@ -126,18 +126,25 @@ export const zipcode = () => ({
 
 // ------ Question Groups
 
-export const fruitQuestions = () => ({
-  $formkit: 'group',
-  id: 'fruitQuestions',
-  name: 'fruitQuestions',
+// NOTE: name must be unique!
+const group = (name, updates) => {
+  return merge({
+    $cmp: 'FormKit',
+    props: {
+      type: 'group',
+      key: name,
+      id: name,
+      name: name
+    },
+  }, updates)
+}
+
+export const fruitQuestions = () => group("fruitQuestions", {
   if: '$get(category).value == "Fruits"',
   children: [pickyEater(), favoriteFruit(), foodSource()]
 })
 
-export const vegetableQuestions = () => ({
-  $formkit: 'group',
-  id: 'vegetableQuestions',
-  name: 'vegetableQuestions',
+export const vegetableQuestions = () => group("vegetableQuestions", {
   if: '$get(category).value == "Vegetables"',
   children: [pickyEater(), favoriteVegetable(), foodSource()]
 })
