@@ -35,7 +35,6 @@
     "patchpub": "vite build && npm version patch --force --commit-hooks false && npm publish"
   },
   "dependencies": {
-    "@formkit/tailwindcss": "^1.0.0-beta.8",
     "@formkit/vue": "^1.0.0-beta.8",
     "vue": "^3.2.16"
   },
@@ -44,6 +43,7 @@
     "@vitejs/plugin-vue": "^1.9.3",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
-    "tailwindcss": "^3.0.24"
+    "tailwindcss": "^3.0.24",
+    "@formkit/tailwindcss": "^1.0.0-beta.8"
   }
 }
