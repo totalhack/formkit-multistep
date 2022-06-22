@@ -50,14 +50,14 @@ const dataDefaults = {
   lastStep: () => {
     return lastStep()
   },
-  setNextStep: target => () => {
-    setNextStep()
+  setNextStep: callback => () => {
+    return setNextStep(callback)
   },
-  setPreviousStep: target => () => {
-    setPreviousStep()
+  setPreviousStep: callback => () => {
+    return setPreviousStep(callback)
   },
   setStep: (nextStep, validate) => () => {
-    setStep({ nextStep, validate })
+    return setStep({ nextStep, validate })
   },
   stepIsValid: stepName => {
     return steps[stepName].valid && steps[stepName].errorCount === 0
@@ -100,7 +100,7 @@ const dataDefaults = {
     }
 
     if (abort) {
-      return
+      return false
     }
 
     if (redirectUrl instanceof Function) {
@@ -112,6 +112,7 @@ const dataDefaults = {
       }
       redirect(redirectUrl)
     }
+    return true
   },
   stringify: (value) => JSON.stringify(value, null, 2),
 }

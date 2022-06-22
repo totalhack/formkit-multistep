@@ -76,7 +76,7 @@ export default function useSteps() {
         )
       })
       if (!node.context.state.valid) {
-        return
+        return false
       }
     }
 
@@ -92,14 +92,24 @@ export default function useSteps() {
     } else {
       throw Error("Unexpected value for nextStep: " + nextStep)
     }
+
+    return true
   }
 
-  const setNextStep = () => {
-    setStep({ nextStep: 1 })
+  const setNextStep = (callback) => {
+    const res = setStep({ nextStep: 1 })
+    if (callback) {
+      callback(res, stepHistory, stepQueue)
+    }
+    return res
   }
 
-  const setPreviousStep = () => {
-    setStep({ nextStep: -1, validate: false })
+  const setPreviousStep = (callback) => {
+    const res = setStep({ nextStep: -1, validate: false })
+    if (callback) {
+      callback(res, stepHistory, stepQueue)
+    }
+    return res
   }
 
   const stepPlugin = (node) => {

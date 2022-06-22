@@ -34,6 +34,9 @@ const data = {
     values: {
       zip_code: "12345",
     }
+  },
+  nextStepCallback: (stepResult, stepHistory, stepQueue) => {
+    console.log('nextStepCallback:', stepResult, stepHistory.value, stepQueue.value)
   }
 }
 
