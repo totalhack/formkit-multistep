@@ -1,6 +1,6 @@
 {
   "name": "formkit-multistep",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publishConfig": {
     "access": "public"
   },
@@ -35,7 +35,7 @@
     "patchpub": "vite build && npm version patch --force --commit-hooks false && npm publish"
   },
   "dependencies": {
-    "@formkit/vue": "^1.0.0-beta.8",
+    "@formkit/vue": "^1.0.0-beta.9",
     "vue": "^3.2.16"
   },
   "devDependencies": {
@@ -43,7 +43,8 @@
     "@vitejs/plugin-vue": "^1.9.3",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
+    "postcss-preset-env": "^7.7.2",
     "tailwindcss": "^3.0.24",
-    "@formkit/tailwindcss": "^1.0.0-beta.8"
+    "@formkit/tailwindcss": "^1.0.0-beta.9"
   }
 }

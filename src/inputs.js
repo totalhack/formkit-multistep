@@ -7,7 +7,7 @@ const yesnoradio = (updates) => {
     $formkit: 'radio',
     validation: 'required',
     validationMessages: {
-      required: 'Field is required',
+      required: 'Field is required'
     },
     optionsClass: 'pt-3 pl-1',
     options: [
@@ -23,8 +23,8 @@ const select = (updates) => {
     placeholder: "Please Select",
     validation: 'required',
     validationMessages: {
-      required: 'Field is required',
-    },
+      required: 'Field is required'
+    }
   }, updates)
 }
 
@@ -43,7 +43,7 @@ export const category = () => select({
 
 export const pickyEater = () => yesnoradio({
   name: 'pickyEater',
-  label: 'Are You a Picky Eater?',
+  label: 'Are You a Picky Eater?'
 })
 
 export const foodSource = () => select({
@@ -86,7 +86,7 @@ export const consent = () => ({
   name: 'consent',
   validation: 'required|accepted',
   validationMessages: {
-    accepted: 'You must agree!',
+    accepted: 'You must agree!'
   },
   classes: {
     label: "text-xs text-slate-500"
@@ -136,7 +136,7 @@ const group = (name, updates) => {
       key: name,
       id: name,
       name: name
-    },
+    }
   }, updates)
 }
 

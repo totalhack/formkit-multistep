@@ -7,7 +7,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/components/index.js'),
       name: 'FormKitMultiStep',
-      fileName: (format) => `formkit-multistep.${format}.js`,
+      fileName: (format) => `formkit-multistep.${format}.js`
     },
     rollupOptions: {
       external: ['vue'],
@@ -15,10 +15,10 @@ export default defineConfig({
         // Provide global variables to use in the UMD build
         // Add external deps here
         globals: {
-          vue: 'Vue',
-        },
-      },
-    },
+          vue: 'Vue'
+        }
+      }
+    }
   },
   plugins: [vue()]
 })

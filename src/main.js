@@ -9,7 +9,7 @@ createApp(App).use(
   plugin,
   defaultConfig({
     config: {
-      classes: generateClasses(theme),
-    },
+      classes: generateClasses(theme)
+    }
   })
 ).mount('#app')

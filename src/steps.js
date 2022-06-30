@@ -25,7 +25,7 @@ function step(name, inputs, ...args) {
           name: name,
           children: inputs
         }, ...args)
-      ],
+      ]
     }
   )
 }
@@ -35,7 +35,7 @@ export function categoryAndZip() {
     'categoryAndZip',
     [
       inp.zipcode(),
-      inp.category(),
+      inp.category()
     ],
     ...arguments
   )
