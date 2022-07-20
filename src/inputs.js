@@ -125,6 +125,12 @@ export const zipcode = () => ({
   validation: 'required|matches:/^[0-9]{5}$/'
 })
 
+export const hidden = () => ({
+  $formkit: 'hidden',
+  name: "hidden",
+  value: null
+})
+
 // ------ Question Groups
 
 // NOTE: name must be unique!
@@ -142,7 +148,7 @@ const group = (name, updates) => {
 
 export const fruitQuestions = () => group("fruitQuestions", {
   if: '$get(category).value == "Fruits"',
-  children: [pickyEater(), favoriteFruit(), foodSource()]
+  children: [hidden(), pickyEater(), favoriteFruit(), foodSource()]
 })
 
 export const vegetableQuestions = () => group("vegetableQuestions", {

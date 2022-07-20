@@ -14,6 +14,20 @@ export default function useSteps() {
     return x.value[x.value.length - 1]
   }
 
+  const findFirstInput = (n) => {
+    for (var i = 0; i < n.children.length; i++) {
+      const child = n.children[i]
+      if ((child.type === 'input' || child.type === 'list') && !(child.context.type === 'hidden')) {
+        return child
+      }
+      const res = findFirstInput(child)
+      if (res) {
+        return res
+      }
+    }
+    return null
+  }
+
   const firstStep = () => {
     if (stepHistory.value.length > 0) {
       return stepHistory.value[0]
@@ -62,7 +76,7 @@ export default function useSteps() {
     return keyValOverlap(node.value, nextStepMap)
   }
 
-  const setStep = ({ nextStep = 1, validate = true } = {}) => {
+  const setStep = ({ nextStep = 1, validate = true, autoFocus = true } = {}) => {
     const node = steps[activeStep.value].node
 
     if (validate) {
@@ -91,6 +105,18 @@ export default function useSteps() {
       advanceStep(nextStep)
     } else {
       throw Error("Unexpected value for nextStep: " + nextStep)
+    }
+
+    if (autoFocus) {
+      const newNode = steps[activeStep.value].node
+      setTimeout(function () {
+        const firstInput = findFirstInput(newNode)
+        if (!firstInput) {
+          return
+        }
+        const elem = document.getElementById(firstInput.context.id)
+        elem.focus()
+      }, 300);
     }
 
     return true
