@@ -116,7 +116,7 @@ export default function useSteps() {
         }
         const elem = document.getElementById(firstInput.context.id)
         elem.focus()
-      }, 300);
+      }, 400);
     }
 
     return true
