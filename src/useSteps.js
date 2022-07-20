@@ -59,7 +59,7 @@ export default function useSteps() {
   }
 
   const getNextStepsFromMap = (node, nextStepMap) => {
-    return keyValOverlap(node.value, nextStepMap, false)
+    return keyValOverlap(node.value, nextStepMap)
   }
 
   const setStep = ({ nextStep = 1, validate = true } = {}) => {
@@ -71,7 +71,7 @@ export default function useSteps() {
           createMessage({
             key: 'submitted',
             value: true,
-            visible: false,
+            visible: false
           })
         )
       })

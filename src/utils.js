@@ -52,19 +52,32 @@ export const handleSubmitError = (err, node) => {
   return true // abort by default
 }
 
-// Helper to map form values over various input maps
-export const keyValOverlap = (o1, o2, multiple = true) => {
+export const getKey = (d, path) => {
+  if (typeof (path) === 'string') {
+    path = path.split('.')
+  }
+  return path.reduce((x, y) => x[y], d)
+}
+
+// Helper to map an input object key/val over a value map
+export const keyValOverlap = (o1, o2) => {
   let result = null;
-  for (var input of Object.keys(o1)) {
-    const value = o1[input]
-    if (o2[input] && o2[input][value]) {
-      if (result !== null && !multiple) {
-        throw Error('Multiple values not allowed')
-      }
-      result = o2[input][value]
+
+  for (var key of Object.keys(o2)) {
+    if (key === '*') {
+      continue
+    }
+    const o1_value = getKey(o1, key)
+    if (!o1_value) {
+      continue
+    }
+
+    if (o2[key][o1_value]) {
+      result = o2[key][o1_value];
       break
     }
   }
+
   if (result === null) {
     if ('*' in o2) {
       return o2['*'] // '*' is special placeholder for defaults
@@ -72,13 +85,6 @@ export const keyValOverlap = (o1, o2, multiple = true) => {
     throw Error('result not found and no default specified')
   }
   return result
-}
-
-export const getKey = (d, path) => {
-  if (typeof (path) === 'string') {
-    path = path.split('.')
-  }
-  return path.reduce((x, y) => x[y], d)
 }
 
 export const strSub = (str, obj) => str.replace(/\${(.*?)}/g, (x, g) => getKey(obj, g));

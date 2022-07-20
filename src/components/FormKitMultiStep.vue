@@ -82,7 +82,7 @@ const dataDefaults = {
     if (!node || !node.props.attrs.redirectMap) {
       return
     }
-    return keyValOverlap(formData, node.props.attrs.redirectMap, false)
+    return keyValOverlap(formData, node.props.attrs.redirectMap)
   },
   submit: (postUrl, prepData = null, redirectUrl = null) => async (formData, node) => {
     if (prepData && prepData != 'null') {
