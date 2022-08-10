@@ -148,14 +148,14 @@ export default function useSteps() {
     if (autoFocus) {
       const newNode = steps[activeStep.value].node
       const firstInput = findFirstInput(newNode)
-      if (!firstInput) {
-        return
+      if (firstInput && autoFocusTypes.indexOf(firstInput.context.type) > -1) {
+        const elem = document.getElementById(firstInput.context.id)
+        try {
+          focusAndOpenKeyboard(elem)
+        } catch (e) {
+          console.warn('Failed to autoFocus:', e)
+        }
       }
-      if (autoFocusTypes.indexOf(firstInput.context.type) === -1) {
-        return
-      }
-      const elem = document.getElementById(firstInput.context.id)
-      focusAndOpenKeyboard(elem)
     }
 
     return true
