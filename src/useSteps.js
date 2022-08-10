@@ -2,6 +2,16 @@ import { reactive, toRef, ref } from 'vue'
 import { createMessage } from '@formkit/core'
 import { keyValOverlap } from './utils.js'
 
+const autoFocusTypes = [
+  "email",
+  "number",
+  "password",
+  "search",
+  "text",
+  "textarea",
+  "tel",
+  "url"
+]
 
 export default function useSteps() {
   const activeStep = ref('')
@@ -26,6 +36,34 @@ export default function useSteps() {
       }
     }
     return null
+  }
+
+  const focusAndOpenKeyboard = (el, timeout) => {
+    // https://stackoverflow.com/a/55425845/10682164
+    if (!timeout) {
+      timeout = 100;
+    }
+    if (el) {
+      // Align temp input element approximately where the input element is
+      // so the cursor doesn't jump around
+      var __tempEl__ = document.createElement('input');
+      __tempEl__.style.position = 'absolute';
+      __tempEl__.style.top = (el.offsetTop + 7) + 'px';
+      __tempEl__.style.left = el.offsetLeft + 'px';
+      __tempEl__.style.height = 0;
+      __tempEl__.style.opacity = 0;
+      // Put this temp element as a child of the page <body> and focus on it
+      document.body.appendChild(__tempEl__);
+      __tempEl__.focus();
+
+      // The keyboard is open. Now do a delayed focus on the target element
+      setTimeout(function () {
+        el.focus();
+        el.click();
+        // Remove the temp element
+        document.body.removeChild(__tempEl__);
+      }, timeout);
+    }
   }
 
   const firstStep = () => {
@@ -109,14 +147,15 @@ export default function useSteps() {
 
     if (autoFocus) {
       const newNode = steps[activeStep.value].node
-      setTimeout(function () {
-        const firstInput = findFirstInput(newNode)
-        if (!firstInput) {
-          return
-        }
-        const elem = document.getElementById(firstInput.context.id)
-        elem.focus()
-      }, 400);
+      const firstInput = findFirstInput(newNode)
+      if (!firstInput) {
+        return
+      }
+      if (autoFocusTypes.indexOf(firstInput.context.type) === -1) {
+        return
+      }
+      const elem = document.getElementById(firstInput.context.id)
+      focusAndOpenKeyboard(elem)
     }
 
     return true

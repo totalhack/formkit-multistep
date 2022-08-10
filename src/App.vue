@@ -52,6 +52,7 @@ const schema = [
     props: {
       type: 'form',
       id: 'form',
+      config: { validationVisibility: 'submit' },
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj)',
       onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $getRedirect)',

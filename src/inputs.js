@@ -121,6 +121,8 @@ export const zipcode = () => ({
   $formkit: 'text',
   label: 'Zip Code',
   placeholder: '90210',
+  maxlength: 5,
+  inputmode: "numeric",
   name: 'zip_code',
   validation: 'required|matches:/^[0-9]{5}$/'
 })
@@ -153,5 +155,5 @@ export const fruitQuestions = () => group("fruitQuestions", {
 
 export const vegetableQuestions = () => group("vegetableQuestions", {
   if: '$get(category).value == "Vegetables"',
-  children: [pickyEater(), favoriteVegetable(), foodSource()]
+  children: [favoriteVegetable(), pickyEater(), foodSource()]
 })
