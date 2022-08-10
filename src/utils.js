@@ -6,6 +6,16 @@ export function dbg() {
   console.debug(...arguments)
 }
 
+export const getCoords = (elem) => {
+  let box = elem.getBoundingClientRect()
+  return {
+    top: box.top + window.pageYOffset,
+    right: box.right + window.pageXOffset,
+    bottom: box.bottom + window.pageYOffset,
+    left: box.left + window.pageXOffset
+  }
+}
+
 export const postJSON = async (url, data) => {
   dbg("Post to: " + url)
   const raw = await fetch(url, {
