@@ -20,7 +20,6 @@ for (var node of props.schema) {
 
 // shallow merge
 const mergedData = reactive(Object.assign({}, dataDefaults, { meta }, props.data));
-console.debug("FormKitSchema data:", mergedData)
 </script>
 
 <script>

@@ -1,3 +1,5 @@
+import { dbg } from './utils.js'
+
 export default function usePrepop() {
   let prepopSettings = {}
   const urlParams = new URLSearchParams(window.location.search);
@@ -33,12 +35,12 @@ export default function usePrepop() {
             }
           }
           if (!found) {
-            console.debug('Prepop option not found for:', node.name, value)
+            dbg('Prepop option not found for:', node.name, value)
             return
           }
         }
 
-        console.debug('Setting prepop value for:', node.name, value)
+        dbg('Setting prepop value for:', node.name, value)
         node.input(value)
       }
     }

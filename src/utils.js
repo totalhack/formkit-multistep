@@ -1,5 +1,13 @@
+const urlParams = new URLSearchParams(window.location.search);
+const DEBUG = urlParams.get('fdbg')
+
+export function dbg() {
+  if (DEBUG != 1) return
+  console.debug(...arguments)
+}
+
 export const postJSON = async (url, data) => {
-  console.debug("Posting to " + url)
+  dbg("Post to: " + url)
   const raw = await fetch(url, {
     method: 'POST',
     headers: {
@@ -14,7 +22,7 @@ export const postJSON = async (url, data) => {
     throw error
   }
   const res = await raw.json();
-  console.debug("POST response:" + JSON.stringify(res, null, 2));
+  dbg("Post resp: " + JSON.stringify(res, null, 2));
   return res
 }
 
