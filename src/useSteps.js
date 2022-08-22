@@ -114,7 +114,7 @@ export default function useSteps() {
     return keyValOverlap(node.value, nextStepMap)
   }
 
-  const setStep = ({ nextStep = 1, validate = true, autoFocus = true } = {}) => {
+  const setStep = ({ nextStep = 1, validate = true, autoFocus = true, preStep = null } = {}) => {
     const node = steps[activeStep.value].node
 
     if (validate) {
@@ -130,6 +130,10 @@ export default function useSteps() {
       if (!node.context.state.valid) {
         return false
       }
+    }
+
+    if (preStep) {
+      preStep(node)
     }
 
     if (node.props.attrs.nextStepMap) {
@@ -161,8 +165,8 @@ export default function useSteps() {
     return true
   }
 
-  const setNextStep = (callback) => {
-    const res = setStep({ nextStep: 1 })
+  const setNextStep = (callback, preStep) => {
+    const res = setStep({ nextStep: 1, preStep })
     if (callback) {
       callback(res, stepHistory, stepQueue)
     }

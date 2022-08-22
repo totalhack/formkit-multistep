@@ -83,7 +83,7 @@ export const formNavigation = () => ({
     },
     {
       $formkit: 'button',
-      onClick: '$setNextStep($nextStepCallback)',
+      onClick: '$setNextStep($nextStepCallback, $preStepFunc)',
       children: 'Next Step',
       style: {
         if: '$activeStep === $lastStep()',

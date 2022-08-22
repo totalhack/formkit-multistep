@@ -37,6 +37,9 @@ const data = {
   },
   nextStepCallback: (stepResult, stepHistory, stepQueue) => {
     console.log('nextStepCallback:', stepResult, stepHistory.value, stepQueue.value)
+  },
+  preStepFunc: (stepNode) => {
+    console.log('preStepFunc:', stepNode)
   }
 }
 

@@ -49,14 +49,14 @@ const dataDefaults = {
   lastStep: () => {
     return lastStep()
   },
-  setNextStep: callback => () => {
-    return setNextStep(callback)
+  setNextStep: (callback, preStep) => () => {
+    return setNextStep(callback, preStep)
   },
   setPreviousStep: callback => () => {
     return setPreviousStep(callback)
   },
-  setStep: (nextStep, validate) => () => {
-    return setStep({ nextStep, validate })
+  setStep: (nextStep, validate, autoFocus, preStep) => () => {
+    return setStep({ nextStep, validate, autoFocus, preStep })
   },
   stepIsValid: stepName => {
     return steps[stepName].valid && steps[stepName].errorCount === 0
