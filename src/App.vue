@@ -4,7 +4,7 @@
 
 <script setup>
 import { reactive } from 'vue'
-import { FormKitMultiStep } from './components/';
+import { FormKitMultiStep, getRedirect, redirectTo, openNewTab } from './components/';
 import { categoryAndZip, subcategory, contactInfo, formNavigation, formDetails } from './steps.js'
 
 const flattenObj = (obj) => {
@@ -40,6 +40,18 @@ const data = {
   },
   preStepFunc: (stepNode) => {
     console.log('preStepFunc:', stepNode)
+  },
+  handleRedirectNewTab: (formData, node) => {
+    var redirectUrl = getRedirect(formData, node)
+    if (redirectUrl && redirectUrl !== 'null') {
+      const res = openNewTab(redirectUrl)
+      if (res !== null) {
+        redirectTo('https://www.google.com?oldtab=1')
+      } else {
+        console.warn('new tab failed')
+        redirectTo(redirectUrl)
+      }
+    }
   }
 }
 
@@ -56,11 +68,11 @@ const schema = [
       type: 'form',
       id: 'form',
       config: { validationVisibility: 'submit' },
+      onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectNewTab)',
+      // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectMap)',
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, "https://www.google.com?x=${subid}")',
-      // onSubmit: '$submit("https://httpbin.org/post", $flattenObj)',
-      onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $getRedirect)',
       // onSubmit: '$submit("https://httpbin.org/status/403", $flattenObj)',
-      // onSubmit: '$submit("https://httpbin.org/status/409", $flattenObj,  "https://www.google.com?x=${subid}")',
+      // onSubmit: '$submit("https://httpbin.org/status/409", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/429", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/500", $flattenObj)',
       // onSubmit: '$mySubmit',

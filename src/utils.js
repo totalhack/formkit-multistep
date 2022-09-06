@@ -36,9 +36,31 @@ export const postJSON = async (url, data) => {
   return res
 }
 
-export const redirect = (url) => {
+export const redirectTo = (url) => {
   // similar behavior as clicking on a link, maintains back button
   window.location.href = url
+}
+
+export const openNewTab = (url) => {
+  var otherTab = window.open()
+  if (otherTab !== null) {
+    // Note: doesn't block referrer
+    otherTab.opener = null
+    otherTab.target = '_blank'
+    otherTab.location = url
+  }
+  return otherTab
+}
+
+export const getRedirect = (formData, node) => {
+  if (!node || !node.props.attrs.redirectMap) {
+    return null
+  }
+  var redirectUrl = keyValOverlap(formData, node.props.attrs.redirectMap)
+  if (redirectUrl && formData) {
+    redirectUrl = strSubUrl(redirectUrl, formData)
+  }
+  return redirectUrl
 }
 
 export const handleSubmitError = (err, node) => {

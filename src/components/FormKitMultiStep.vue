@@ -25,7 +25,7 @@ const mergedData = reactive(Object.assign({}, dataDefaults, { meta }, props.data
 <script>
 import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
-import { postJSON, redirect, strSubUrl, handleSubmitError, keyValOverlap } from '../utils.js'
+import { postJSON, strSubUrl, getRedirect, redirectTo, handleSubmitError } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
@@ -77,13 +77,13 @@ const dataDefaults = {
     }
     return true
   },
-  getRedirect: (formData, node) => {
-    if (!node || !node.props.attrs.redirectMap) {
-      return
+  handleRedirectMap: (formData, node) => {
+    const redirectUrl = getRedirect(formData, node)
+    if (redirectUrl && redirectUrl !== 'null') {
+      redirectTo(redirectUrl)
     }
-    return keyValOverlap(formData, node.props.attrs.redirectMap)
   },
-  submit: (postUrl, prepData = null, redirectUrl = null) => async (formData, node) => {
+  submit: (postUrl, prepData = null, redirect = null) => async (formData, node) => {
     if (prepData && prepData != 'null') {
       if (!(prepData instanceof Function)) {
         throw 'prepData must be a function'
@@ -102,14 +102,13 @@ const dataDefaults = {
       return false
     }
 
-    if (redirectUrl instanceof Function) {
-      redirectUrl = redirectUrl(formData, node)
-    }
-    if (redirectUrl && redirectUrl !== 'null') {
+    if (typeof redirect === 'string' && redirect !== 'null') {
       if (formData) {
-        redirectUrl = strSubUrl(redirectUrl, formData)
+        redirect = strSubUrl(redirect, formData)
       }
-      redirect(redirectUrl)
+      redirectTo(redirect)
+    } else if (redirect instanceof Function) {
+      redirect(formData, node)
     }
     return true
   },
