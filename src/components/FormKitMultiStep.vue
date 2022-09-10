@@ -72,6 +72,9 @@ const dataDefaults = {
     if (!node || !key || !node.attrs.inputMap) {
       return true
     }
+    if (!(key in node.attrs.inputMap)) {
+      return false
+    }
     if (node.attrs.inputMap[key].indexOf(inputName) < 0) {
       return false
     }
