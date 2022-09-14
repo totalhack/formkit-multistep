@@ -110,7 +110,8 @@ const dataDefaults = {
         redirect = strSubUrl(redirect, formData)
       }
       redirectTo(redirect)
-    } else if (redirect instanceof Function) {
+    } else if (redirect) {
+      // Assume it's a function that handles the redirect
       redirect(formData, node)
     }
     return true
