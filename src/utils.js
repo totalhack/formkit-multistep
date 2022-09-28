@@ -92,9 +92,12 @@ export const handleSubmitError = (err, node) => {
   return true // abort by default
 }
 
-export const getKey = (d, path) => {
+export const getKey = (d, path, def) => {
   if (typeof (path) === 'string') {
     path = path.split('.')
+  }
+  if (typeof def !== 'undefined') {
+    return path.reduce((x, y) => x[y] || def, d)
   }
   return path.reduce((x, y) => x[y], d)
 }

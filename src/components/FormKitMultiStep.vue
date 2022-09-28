@@ -25,7 +25,7 @@ const mergedData = reactive(Object.assign({}, dataDefaults, { meta }, props.data
 <script>
 import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
-import { postJSON, strSubUrl, getRedirect, redirectTo, handleSubmitError } from '../utils.js'
+import { postJSON, strSubUrl, getRedirect, redirectTo, handleSubmitError, getKey } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
@@ -67,6 +67,9 @@ const dataDefaults = {
       return true
     }
     return enabledSteps().indexOf(stepName) > -1
+  },
+  getKey: (d, k, def) => {
+    return getKey(d, k, def)
   },
   inputIsEnabled: (node, key, inputName) => {
     if (!node || !key || !node.attrs.inputMap) {

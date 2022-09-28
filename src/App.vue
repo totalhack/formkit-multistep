@@ -59,7 +59,8 @@ const schema = [
   {
     type: 'meta',
     data: {
-      someTestField: "Hey you can access this elsewhere as $meta.someTestField"
+      someTestField: "Hey you can access this elsewhere as $meta.someTestField",
+      subheadline: "Custom meta subheadline!"
     }
   },
   {
@@ -107,7 +108,7 @@ const schema = [
       },
       {
         $el: 'h3',
-        children: 'Get Your Questions Answered Today!',
+        children: '$getKey($meta, "subheadline", "Get Your Questions Answered Today!")',
         attrs: {
           class: 'text-center text-l font-bold text-blue-500'
         }
