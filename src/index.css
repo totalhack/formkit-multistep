@@ -8,7 +8,7 @@
     --gray: #ccccd7;
     --gray-l: #eeeef4;
 }
-  
+
 .formkit-form {
     max-width: 500px;
     flex-shrink: 0;
@@ -18,14 +18,14 @@
     color: #000;
     border: 1px solid var(--gray);
     border-radius: 0.5em;
-    box-shadow: 0.25em 0.25em 1em 0 rgba(0,0,0,0.1);
+    box-shadow: 0.25em 0.25em 1em 0 rgba(0, 0, 0, 0.1);
 }
-  
+
 #app .source-content {
     padding: 2em;
     background: transparent;
 }
-  
+
 .steps {
     list-style-type: none;
     margin: 0;
@@ -36,7 +36,7 @@
     overflow: hidden;
     border-bottom: 1px solid var(--gray);
 }
-  
+
 .step {
     font-size: 14px;
     display: flex;
@@ -49,26 +49,29 @@
     flex-shrink: 0;
     position: relative;
 }
-  
+
 .step:last-child {
-    box-shadow: 0.1em -0.1 0.1em 0 rgba(0,0,0,0.33)
+    box-shadow: 0.1em -0.1 0.1em 0 rgba(0, 0, 0, 0.33)
 }
-  
-.step:hover { cursor: pointer; }
-  
+
+.step:hover {
+    cursor: pointer;
+}
+
 [data-step-active="true"] {
     color: black;
     background: white !important;
     border-bottom: none;
     position: relative;
 }
-  
+
 .step--errors,
 [data-step-valid="true"]:after {
     content: 'âœ“';
     background-color: #54A085;
     position: absolute;
-    top: 4px; right: 4px;
+    top: 4px;
+    right: 4px;
     height: 18px;
     width: 18px;
     border-radius: 50%;
@@ -80,83 +83,155 @@
     text-align: center;
     color: white;
 }
-  
+
 .step--errors {
     background-color: #ff4949;
     color: #fff;
     z-index: 100;
 }
-  
+
 .step-nav {
     display: flex;
     margin-top: 2em;
     margin-bottom: 1em;
     justify-content: space-between;
 }
-  
+
 .form-body {
     padding: 2em;
 }
-  
-.next { margin-left: auto;}
-  
+
+.next {
+    margin-left: auto;
+}
+
 .formkit-outer[data-type="submit"] .formkit-wrapper {
     /* padding: 0 2em 1em 2em; */
     display: flex;
 }
-  
+
 .formkit-outer[data-type="submit"] .formkit-input {
     margin-left: auto;
     margin-right: 0;
 }
-  
+
 details {
     border: 1px solid var(--gray);
     background: var(--gray-l);
     border-radius: .15em;
     padding: 1em;
 }
-  
-.formkit-form > .formkit-messages {
+
+.formkit-form>.formkit-messages {
     padding: 0 2em 0em 2em;
 }
-.formkit-form > .formkit-messages:last-child {
+
+.formkit-form>.formkit-messages:last-child {
     padding: 0 2em 2em 2em;
 }
-  
-[data-errors="true"] .formkit-label { color: #ff4949; }
-.formkit-wrapper { max-width: 100%; }
-button:hover, summary { cursor: pointer }
-p { max-width: 600px;}
-p small { color: #999; }
-h1 { margin: .25em 0; max-width: 600px;}
-  
+
+[data-errors="true"] .formkit-label {
+    color: #ff4949;
+}
+
+.formkit-wrapper {
+    max-width: 100%;
+}
+
+button:hover,
+summary {
+    cursor: pointer
+}
+
+p {
+    max-width: 600px;
+}
+
+p small {
+    color: #999;
+}
+
+h1 {
+    margin: .25em 0;
+    max-width: 600px;
+}
+
 @media (max-width: 438px) {
-    h1 { font-size: 1.15em; }
+    h1 {
+        font-size: 1.15em;
+    }
+
     #app .source-content {
-      padding: 0.5em;
+        padding: 0.5em;
     }
+
     .steps {
-      flex-direction: column;
+        flex-direction: column;
     }
+
     .step {
-      border-bottom: 1px solid var(--gray);
-      border-right: none;
+        border-bottom: 1px solid var(--gray);
+        border-right: none;
     }
+
     .step:last-child {
-      border-bottom: none;
+        border-bottom: none;
     }
+
     .form-body {
-      padding: 1em;
+        padding: 1em;
     }
+
     .formkit-outer[data-type="submit"] .formkit-wrapper {
-      padding: 0 1em 1em 1em;
-      display: flex;
+        padding: 0 1em 1em 1em;
+        display: flex;
     }
-    .formkit-form > .formkit-messages {
-      padding: 0 1em 0em 1em;
+
+    .formkit-form>.formkit-messages {
+        padding: 0 1em 0em 1em;
     }
-    .formkit-form > .formkit-messages:last-child {
-      padding: 0 1em 1em 1em;
+
+    .formkit-form>.formkit-messages:last-child {
+        padding: 0 1em 1em 1em;
     }
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.formkit-form[data-loading="true"] .formkit-outer[data-disabled="true"]:not([data-type="checkbox"], [data-type="radio"], [data-type="range"]) .formkit-inner {
+    color: #fff !important;
+    cursor: not-allowed;
+}
+
+.formkit-form[data-loading="true"] .formkit-wrapper .formkit-input[type="submit"] {
+    filter: brightness(1.1);
+    pointer-events: none;
+}
+
+.formkit-form[data-loading="true"] .formkit-wrapper .formkit-input[type="submit"]::before {
+    animation: rotate 0.5s linear infinite;
+    width: 1.28571428em;
+    border: 0.1428571429em solid white;
+    border-right-color: transparent;
+    margin-right: 0.75em;
+    display: inline-block;
+}
+
+.formkit-form .formkit-wrapper .formkit-input[type="submit"]::before {
+    box-sizing: border-box;
+    content: "";
+    width: 0;
+    margin-right: 0;
+    height: 1.28571428em;
+    border: 0 solid transparent;
+    border-radius: 1.28571428em;
+    transition: width 0.25s, border 0.25s, margin-right 0.25s;
+}
+
+[data-disabled="true"] {
+    opacity: .5;
 }

@@ -69,21 +69,26 @@ const schema = [
       type: 'form',
       id: 'form',
       config: { validationVisibility: 'submit' },
-      onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectNewTab)',
-      // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectMap)',
+      // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectNewTab)',
+      onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectMap, "text/plain; charset=UTF-8")',
+      // onSubmit: '$submit("https://httpbingo.org/redirect-to?url=https://www.google.com", $flattenObj)',
+      // onSubmit: '$submit("http://localhost:8080/api/v1/redirect", $flattenObj)',
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, "https://www.google.com?x=${subid}")',
-      // onSubmit: '$submit("https://httpbin.org/status/403", $flattenObj)',
+      // onSubmit: '$submit("https://httpbin.org/status/403", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/409", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/429", $flattenObj, "https://www.google.com?x=${subid}")',
-      // onSubmit: '$submit("https://httpbin.org/status/500", $flattenObj)',
+      // onSubmit: '$submit("https://httpbin.org/status/500", $flattenObj, "https://www.google.com?x=${subid}")',
+      // onSubmit: '$submit("https://httpbin.org/status/504", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$mySubmit',
+      // onSubmit: '$loadingHandler',
       plugins: '$plugins',
       actions: false,
       prepop: '$prepop',
       errorCodes: {
-        403: { message: "An Error Occurred - Forbidden" },
+        403: { message: "An Error Occurred - Forbidden", abort: false },
         409: { abort: false },
-        429: "An Error Occurred - Rate Limit Exceeded"
+        429: "An Error Occurred - Rate Limit Exceeded",
+        504: { message: "An Error Occurred - Timeout", abort: false },
       },
       inputMap: {
         // Can be used to dynamically control inputs by some key
@@ -94,6 +99,7 @@ const schema = [
       redirectMap: {
         'category': {
           'Neither': 'https://www.google.com?x=${subid}&y=1',
+          'Vegetables': 'https://www.google.com?x=${subid}&y=2',
         },
         '*': null
       }

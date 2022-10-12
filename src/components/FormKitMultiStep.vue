@@ -25,7 +25,7 @@ const mergedData = reactive(Object.assign({}, dataDefaults, { meta }, props.data
 <script>
 import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
-import { postJSON, strSubUrl, getRedirect, redirectTo, handleSubmitError, getKey } from '../utils.js'
+import { postData, strSubUrl, getRedirect, redirectTo, handleSubmitError, getKey } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
@@ -89,23 +89,25 @@ const dataDefaults = {
       redirectTo(redirectUrl)
     }
   },
-  submit: (postUrl, prepData = null, redirect = null) => async (formData, node) => {
+  submit: (postUrl, prepData = null, redirect = null, contentType = 'application/json') => async (formData, node) => {
     if (prepData && prepData != 'null') {
       if (!(prepData instanceof Function)) {
         throw 'prepData must be a function'
       }
       formData = prepData(formData)
     }
+
     let abort = false;
     try {
-      const res = await postJSON(postUrl, formData)
+      const res = await postData(postUrl, formData, contentType)
       node.clearErrors()
     } catch (err) {
+      console.error(err)
       abort = handleSubmitError(err, node)
     }
 
     if (abort) {
-      return false
+      return
     }
 
     if (typeof redirect === 'string' && redirect !== 'null') {
@@ -117,7 +119,6 @@ const dataDefaults = {
       // Assume it's a function that handles the redirect
       redirect(formData, node)
     }
-    return true
   },
   stringify: (value) => JSON.stringify(value, null, 2),
 }

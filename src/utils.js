@@ -16,13 +16,13 @@ export const getCoords = (elem) => {
   }
 }
 
-export const postJSON = async (url, data) => {
+export const postData = async (url, data, contentType = 'application/json') => {
   dbg("Post to: " + url)
   const raw = await fetch(url, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': contentType
     },
     body: JSON.stringify(data)
   });
@@ -38,7 +38,7 @@ export const postJSON = async (url, data) => {
 
 export const redirectTo = (url) => {
   // similar behavior as clicking on a link, maintains back button
-  window.location.href = url
+  window.location = url
 }
 
 export const openNewTab = (url) => {
