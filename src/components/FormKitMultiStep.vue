@@ -117,7 +117,7 @@ const dataDefaults = {
       redirectTo(redirect)
     } else if (redirect) {
       // Assume it's a function that handles the redirect
-      redirect(formData, node)
+      await redirect(formData, node)
     }
   },
   stringify: (value) => JSON.stringify(value, null, 2),
