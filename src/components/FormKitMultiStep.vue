@@ -25,7 +25,7 @@ const mergedData = reactive(Object.assign({}, dataDefaults, { meta }, props.data
 <script>
 import usePrepop from '../usePrepop.js'
 import useSteps from '../useSteps.js'
-import { postData, strSubUrl, getRedirect, redirectTo, handleSubmitError, getKey } from '../utils.js'
+import { postData, strSubUrl, getRedirect, redirectTo, handleSubmitError, getKey, sleep } from '../utils.js'
 
 let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
@@ -115,9 +115,12 @@ const dataDefaults = {
         redirect = strSubUrl(redirect, formData)
       }
       redirectTo(redirect)
+      // Keep spinner active longer while we redirect
+      await sleep(2000)
     } else if (redirect) {
       // Assume it's a function that handles the redirect
-      await redirect(formData, node)
+      redirect(formData, node)
+      await sleep(2000)
     }
   },
   stringify: (value) => JSON.stringify(value, null, 2),

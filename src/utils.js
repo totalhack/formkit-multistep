@@ -6,6 +6,10 @@ export function dbg() {
   console.debug(...arguments)
 }
 
+export const sleep = async (time) => {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 export const getCoords = (elem) => {
   let box = elem.getBoundingClientRect()
   return {

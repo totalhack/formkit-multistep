@@ -80,7 +80,6 @@ const schema = [
       // onSubmit: '$submit("https://httpbin.org/status/500", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/504", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$mySubmit',
-      // onSubmit: '$loadingHandler',
       plugins: '$plugins',
       actions: false,
       prepop: '$prepop',
