@@ -134,9 +134,9 @@ export const keyValOverlap = (o1, o2) => {
   return result
 }
 
-export const strSub = (str, obj) => str.replace(/\${(.*?)}/g, (x, g) => getKey(obj, g));
+export const strSub = (str, obj, d = "") => str.replace(/\${(.*?)}/g, (x, g) => getKey(obj, g) || d);
 
-export const strSubUrl = (str, obj) => str.replace(/\${(.*?)}/g, (x, g) => encodeURIComponent(getKey(obj, g)));
+export const strSubUrl = (str, obj, d = "") => str.replace(/\${(.*?)}/g, (x, g) => encodeURIComponent(getKey(obj, g)) || d);
 
 export function merge() {
   return Object.assign({}, ...arguments)
