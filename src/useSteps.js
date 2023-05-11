@@ -132,15 +132,19 @@ export default function useSteps() {
       }
     }
 
+    var nextStepsOverride;
     if (preStep) {
-      preStep(node)
+      // Next steps can optional be overridden by a preStep function or
+      // the nextStepMap below.
+      nextStepsOverride = preStep(node)
     }
 
-    if (node.props.attrs.nextStepMap) {
-      const nextSteps = getNextStepsFromMap(node, node.props.attrs.nextStepMap)
-      if (nextSteps) {
-        setStepQueue([activeStep.value, ...nextSteps])
-      }
+    if (!nextStepsOverride && node.props.attrs.nextStepMap) {
+      nextStepsOverride = getNextStepsFromMap(node, node.props.attrs.nextStepMap)
+    }
+
+    if (nextStepsOverride) {
+      setStepQueue([activeStep.value, ...nextStepsOverride])
     }
 
     if (typeof (nextStep) === 'number') {

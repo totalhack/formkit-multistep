@@ -40,6 +40,7 @@ const data = {
   },
   preStepFunc: (stepNode) => {
     console.log('preStepFunc:', stepNode)
+    // return ['contactInfo'];
   },
   handleRedirectNewTab: (formData, node) => {
     var redirectUrl = getRedirect(formData, node)
