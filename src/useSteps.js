@@ -127,7 +127,7 @@ export default function useSteps() {
           })
         )
       })
-      if (!node.context.state.valid) {
+      if (!node.context?.state.valid) {
         return false
       }
     }
