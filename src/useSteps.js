@@ -127,7 +127,11 @@ export default function useSteps() {
           })
         )
       })
-      if (!node.context?.state.valid) {
+      if (!node.context) {
+        console.warn('No context found for node:', node)
+        return false
+      }
+      if (!node.context.state.valid) {
         return false
       }
     }
