@@ -5,15 +5,13 @@ const stepDefaults = (step) => ({
   $el: 'section',
   if: '$stepIsEnabled("' + step + '")',
   attrs: {
-    style: {
-      if: '$activeStep !== "' + step + '"',
-      then: 'display: none;'
-    }
+    hidden: '$activeStep !== "' + step + '"'
   }
 })
 
 // ...args get merged onto the group since the 'section' node basically
 // disappears in the formkit hierarchy
+
 function step(name, inputs, ...args) {
   return merge(
     stepDefaults(name),

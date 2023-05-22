@@ -194,48 +194,57 @@ export default function useSteps() {
       if (node.props.attrs.defaultOrder) {
         defaultOrder.push(...node.props.attrs.defaultOrder)
       }
+
+      node.on('childRemoved', ({ payload: childNode }) => {
+        // All 'group' children are assumed to be a step
+        if (childNode.type === 'group') {
+          if (childNode.name in steps) {
+            delete steps[childNode.name]
+          }
+        }
+      })
+
+      node.on('child', ({ payload: childNode }) => {
+        // All 'group' children are assumed to be a step
+        if (childNode.type === 'group') {
+          if (defaultOrder.length > 0) {
+            if (Object.keys(steps).length === 0) {
+              setStepQueue(defaultOrder)
+            }
+          } else {
+            if (!(childNode.name in steps)) { // Make sure not called on node reinit
+              queueStep(childNode.name)
+            }
+          }
+
+          // builds an object of the top-level groups
+          steps[childNode.name] = {}
+          steps[childNode.name].node = childNode;
+
+          // use 'on created' to ensure context object is available
+          childNode.on('created', () => {
+            // if (!childNode.context) return
+            steps[childNode.name].valid = toRef(childNode.context.state, 'valid')
+          })
+
+          childNode.on('count:errors', ({ payload: count }) => {
+            steps[childNode.name].errorCount = count
+          })
+
+          // listen for changes in count of blocking validations messages
+          childNode.on('count:blocking', ({ payload: count }) => {
+            steps[childNode.name].blockingCount = count
+          })
+
+          // set the active tab to the 1st tab
+          if (activeStep.value === '') {
+            activeStep.value = childNode.name
+          }
+        }
+      })
       return true
     }
 
-    if (node.props.type == "group") {
-      // Maintain a default order, can be overwritten to change flow
-      if (defaultOrder.length > 0) {
-        if (Object.keys(steps).length === 0) {
-          setStepQueue(defaultOrder)
-        }
-      } else {
-        if (!(node.name in steps)) { // Make sure not called on node reinit
-          queueStep(node.name)
-        }
-      }
-
-      // builds an object of the top-level groups
-      steps[node.name] = steps[node.name] || {}
-      steps[node.name].node = node;
-
-      // use 'on created' to ensure context object is available
-      node.on('created', () => {
-        steps[node.name].valid = toRef(node.context.state, 'valid')
-      })
-
-      // listen for changes in error count and store it
-      node.on('count:errors', ({ payload: count }) => {
-        steps[node.name].errorCount = count
-      })
-
-      // listen for changes in count of blocking validations messages
-      node.on('count:blocking', ({ payload: count }) => {
-        steps[node.name].blockingCount = count
-      })
-
-      // set the active tab to the 1st tab
-      if (activeStep.value === '') {
-        activeStep.value = node.name
-      }
-
-      // Stop plugin inheritance to descendant nodes
-      return false
-    }
   }
 
   return { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setStepQueue, setNextStep, setPreviousStep }

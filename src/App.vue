@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
 import { FormKitMultiStep, getRedirect, redirectTo, openNewTab } from './components/';
 import { categoryAndZip, subcategory, contactInfo, formNavigation, formDetails } from './steps.js'
 
@@ -127,7 +126,7 @@ const schema = [
       {
         $el: 'div',
         attrs: {
-          class: 'form-body'
+          class: 'form-body',
         },
         children: [
           categoryAndZip({
