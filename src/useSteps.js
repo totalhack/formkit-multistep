@@ -88,6 +88,10 @@ export default function useSteps() {
     stepQueue.value = [...value]
   }
 
+  const stepEnabled = (stepName) => {
+    return enabledSteps().indexOf(stepName) > -1
+  }
+
   const queueStep = (stepName, next = false) => {
     if (next == true) {
       stepQueue.value.unshift(stepName)
@@ -138,7 +142,7 @@ export default function useSteps() {
 
     var nextStepsOverride;
     if (preStep) {
-      // Next steps can optional be overridden by a preStep function or
+      // Next steps can optionally be overridden by a preStep function or
       // the nextStepMap below.
       nextStepsOverride = preStep(node)
     }
@@ -158,16 +162,19 @@ export default function useSteps() {
     }
 
     if (autoFocus) {
-      const newNode = steps[activeStep.value].node
-      const firstInput = findFirstInput(newNode)
-      if (firstInput && autoFocusTypes.indexOf(firstInput.context.type) > -1) {
-        const elem = document.getElementById(firstInput.context.id)
+      // Debounce autofocus
+      setTimeout(function () {
         try {
-          focusAndOpenKeyboard(elem)
+          const newNode = steps[activeStep.value].node
+          const firstInput = findFirstInput(newNode)
+          if (firstInput && autoFocusTypes.indexOf(firstInput.context.type) > -1) {
+            const elem = document.getElementById(firstInput.context.id)
+            focusAndOpenKeyboard(elem)
+          }
         } catch (e) {
           console.warn('Failed to autoFocus:', e)
         }
-      }
+      }, 50)
     }
 
     return true
@@ -212,7 +219,7 @@ export default function useSteps() {
               setStepQueue(defaultOrder)
             }
           } else {
-            if (!(childNode.name in steps)) { // Make sure not called on node reinit
+            if (!stepEnabled(childNode.name)) {
               queueStep(childNode.name)
             }
           }
@@ -247,5 +254,5 @@ export default function useSteps() {
 
   }
 
-  return { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, defaultOrder, activeStep, firstStep, lastStep, setStep, setStepQueue, setNextStep, setPreviousStep }
+  return { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, stepEnabled, defaultOrder, activeStep, firstStep, lastStep, setStep, setStepQueue, setNextStep, setPreviousStep }
 }

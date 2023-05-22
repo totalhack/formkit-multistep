@@ -3,7 +3,7 @@ import * as inp from './inputs.js';
 
 const stepDefaults = (step) => ({
   $el: 'section',
-  if: '$stepIsEnabled("' + step + '")',
+  if: '$stepEnabled("' + step + '")',
   attrs: {
     hidden: '$activeStep !== "' + step + '"'
   }
@@ -57,6 +57,16 @@ export function subcategory() {
     [
       inp.fruitQuestions(),
       inp.vegetableQuestions()
+    ],
+    ...arguments
+  )
+}
+
+export function extra() {
+  return step(
+    'extra',
+    [
+      inp.extraQuestions(),
     ],
     ...arguments
   )

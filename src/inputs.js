@@ -1,3 +1,4 @@
+import { extra } from './steps.js';
 import { merge } from './utils.js';
 
 // ------ Common Base Settings
@@ -60,7 +61,7 @@ export const favoriteFruit = () => select({
   label: 'Favorite Fruit',
   name: 'favoriteFruit',
   id: 'favoriteFruit',
-  // if: '$inputIsEnabled($get(form), $get(category).value, "favoriteFruit")',
+  // if: '$inputEnabled($get(form), $get(category).value, "favoriteFruit")',
   options: [
     'Apples',
     'Bananas',
@@ -72,7 +73,7 @@ export const favoriteVegetable = () => select({
   label: 'Favorite Vegetable',
   name: 'favoriteVegetable',
   id: 'favoriteVegetable',
-  // if: '$inputIsEnabled($get(form), $get(category).value, "favoriteVegetable")',
+  // if: '$inputEnabled($get(form), $get(category).value, "favoriteVegetable")',
   options: [
     'Broccoli',
     'Corn',
@@ -156,4 +157,9 @@ export const fruitQuestions = () => group("fruitQuestions", {
 export const vegetableQuestions = () => group("vegetableQuestions", {
   if: '$get(category).value == "Vegetables"',
   children: [favoriteVegetable(), pickyEater(), foodSource()]
+})
+
+export const extraQuestions = () => group("extraQuestions", {
+  if: '$get(category).value == "Vegetables"',
+  children: [date()]
 })

@@ -4,7 +4,7 @@
 
 <script setup>
 import { FormKitMultiStep, getRedirect, redirectTo, openNewTab } from './components/';
-import { categoryAndZip, subcategory, contactInfo, formNavigation, formDetails } from './steps.js'
+import { categoryAndZip, subcategory, extra, contactInfo, formNavigation, formDetails } from './steps.js'
 
 const flattenObj = (obj) => {
   const flattened = {}
@@ -91,7 +91,7 @@ const schema = [
       },
       inputMap: {
         // Can be used to dynamically control inputs by some key
-        // Ex: if: '$inputIsEnabled($get(form), $get(category).value, "favoriteVegetable")',
+        // Ex: if: '$inputEnabled($get(form), $get(category).value, "favoriteVegetable")',
         'Fruits': ['favoriteFruit'],
         'Vegetables': ['favoriteVegetable']
       },
@@ -132,12 +132,14 @@ const schema = [
           categoryAndZip({
             nextStepMap: {
               'category': {
+                'Vegetables': ['subcategory', 'extra', 'contactInfo'],
                 'Neither': ['contactInfo'],
               },
               '*': ['subcategory', 'contactInfo']
             }
           }),
           subcategory(),
+          extra(),
           contactInfo(),
           formNavigation(),
           formDetails(),
