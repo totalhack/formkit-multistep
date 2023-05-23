@@ -67,7 +67,19 @@ export const getRedirect = (formData, node) => {
   return redirectUrl
 }
 
+var clearErrorTimeout = 0
+
+export const setNodeError = (node, message) => {
+  node.setErrors(message)
+  clearErrorTimeout = setTimeout(() => {
+    node.store.filter((m) => {
+      return m.type !== 'error'
+    })
+  }, 5000)
+}
+
 export const handleSubmitError = (err, node) => {
+  clearTimeout(clearErrorTimeout)
   if (err.response) {
     const code = err.response.status;
     if (node.props.attrs.errorCodes && code in node.props.attrs.errorCodes) {
@@ -87,12 +99,12 @@ export const handleSubmitError = (err, node) => {
       }
 
       if (message) {
-        node.setErrors(message)
+        setNodeError(node, message)
       }
       return abort
     }
   }
-  node.setErrors(err.toString())
+  setNodeError(node, err.toString())
   return true // abort by default
 }
 
