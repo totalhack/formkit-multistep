@@ -144,7 +144,7 @@ const group = (name, updates) => {
       type: 'group',
       key: name,
       id: name,
-      name: name
+      name: name,
     }
   }, updates)
 }

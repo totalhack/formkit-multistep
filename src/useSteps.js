@@ -202,15 +202,6 @@ export default function useSteps() {
         defaultOrder.push(...node.props.attrs.defaultOrder)
       }
 
-      node.on('childRemoved', ({ payload: childNode }) => {
-        // All 'group' children are assumed to be a step
-        if (childNode.type === 'group') {
-          if (childNode.name in steps) {
-            delete steps[childNode.name]
-          }
-        }
-      })
-
       node.on('child', ({ payload: childNode }) => {
         // All 'group' children are assumed to be a step
         if (childNode.type === 'group') {

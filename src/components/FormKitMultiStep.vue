@@ -43,6 +43,9 @@ const dataDefaults = {
   urlParam: (name, backup = null) => {
     return urlParams.get(name) || backup
   },
+  stepKeys: () => {
+    return Object.keys(steps)
+  },
   firstStep: () => {
     return firstStep()
   },
