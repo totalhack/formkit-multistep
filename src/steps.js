@@ -72,6 +72,16 @@ export function extra() {
   )
 }
 
+export function dynamic() {
+  return step(
+    'dynamic',
+    [
+      inp.dynamicQuestions(),
+    ],
+    ...arguments
+  )
+}
+
 // ------ Utility Steps
 
 export const formNavigation = () => ({

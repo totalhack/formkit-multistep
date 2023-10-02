@@ -155,6 +155,13 @@ export default function useSteps() {
       setStepQueue([activeStep.value, ...nextStepsOverride])
     }
 
+    // If the step queue is empty we're done (possibly due to dynamic step logic)
+    if (stepQueue.value.length === 0) {
+      // TODO:
+      // Check if we're done with the form and submit it
+      return true
+    }
+
     if (typeof (nextStep) === 'number') {
       advanceStep(nextStep)
     } else {
@@ -221,7 +228,6 @@ export default function useSteps() {
 
           // use 'on created' to ensure context object is available
           childNode.on('created', () => {
-            // if (!childNode.context) return
             steps[childNode.name].valid = toRef(childNode.context.state, 'valid')
           })
 

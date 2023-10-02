@@ -3,8 +3,11 @@
 </template>
 
 <script setup>
-import { FormKitMultiStep, getRedirect, redirectTo, openNewTab } from './components/';
-import { categoryAndZip, subcategory, extra, contactInfo, formNavigation, formDetails } from './steps.js'
+import { FormKitMultiStep, buildData, getRedirect, redirectTo, openNewTab } from './components/';
+import { categoryAndZip, subcategory, extra, dynamic, contactInfo, formNavigation, formDetails } from './steps.js'
+import { dynamicQuestion } from './inputs.js'
+
+let dynamicSchemaLoaded = false;
 
 const flattenObj = (obj) => {
   const flattened = {}
@@ -52,17 +55,31 @@ const data = {
         redirectTo(redirectUrl)
       }
     }
+  },
+  dynamicStep: dynamic(),
+  dynamicInput: dynamicQuestion(),
+  loadDynamicSchema: (form, schema) => {
+    if (dynamicSchemaLoaded) {
+      console.warn('Dynamic schema already loaded')
+      // Note: this would be used to avoid reloaded a remote schema
+      return schema
+    }
+    console.log('Load dynamic schema', JSON.stringify(schema, null, 2))
+    dynamicSchemaLoaded = true
+    return schema
+  },
+}
+
+const meta = {
+  type: 'meta',
+  data: {
+    someTestField: "Hey you can access this elsewhere as $meta.someTestField",
+    subheadline: "Custom meta subheadline!"
   }
 }
 
 const schema = [
-  {
-    type: 'meta',
-    data: {
-      someTestField: "Hey you can access this elsewhere as $meta.someTestField",
-      subheadline: "Custom meta subheadline!"
-    }
-  },
+  meta,
   {
     $cmp: 'FormKit',
     props: {
@@ -132,12 +149,20 @@ const schema = [
           categoryAndZip({
             nextStepMap: {
               'category': {
-                'Vegetables': ['subcategory', 'extra', 'contactInfo'],
+                'Vegetables': ['dynamic', 'subcategory', 'extra', 'contactInfo'],
                 'Neither': ['contactInfo'],
               },
               '*': ['subcategory', 'contactInfo']
             }
           }),
+          {
+            $cmp: 'FormKitSchema',
+            if: '$get(category).value === "Vegetables"',
+            props: {
+              schema: '$loadDynamicSchema($form, $dynamicStep)',
+              data: buildData([meta], data)
+            }
+          },
           subcategory(),
           extra(),
           contactInfo(),

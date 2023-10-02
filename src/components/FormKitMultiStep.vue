@@ -10,16 +10,7 @@ const props = defineProps({
   schema: Object
 });
 
-const meta = {}
-for (var node of props.schema) {
-  if (!node.type || node.type !== 'meta') {
-    continue
-  }
-  Object.assign(meta, node.data || {})
-}
-
-// shallow merge
-const mergedData = reactive(Object.assign({}, dataDefaults, { meta }, props.data));
+const mergedData = reactive(buildData(props.schema, props.data, dataDefaults))
 </script>
 
 <script>
@@ -31,8 +22,7 @@ let { prepopPlugin } = usePrepop()
 let { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, stepEnabled, defaultOrder, activeStep, firstStep, lastStep, setStep, setNextStep, setPreviousStep } = useSteps()
 const urlParams = new URLSearchParams(window.location.search);
 
-const dataDefaults = {
-  steps,
+const dataDefaultsBase = {
   activeStep,
   stepHistory,
   stepQueue,
@@ -127,6 +117,26 @@ const dataDefaults = {
     }
   },
   stringify: (value) => JSON.stringify(value, null, 2),
+}
+
+// NOTE: the steps var causes a cyclical reference if used in again in
+// a dynamic subschema (using FormKitSchema again).
+const dataDefaults = {
+  ...dataDefaultsBase,
+  steps,
+}
+
+export const buildData = (schema, data, defaults = dataDefaultsBase) => {
+  const meta = {}
+  for (var node of schema) {
+    if (!node.type || node.type !== 'meta') {
+      continue
+    }
+    Object.assign(meta, node.data || {})
+  }
+  // shallow merge
+  const mergedData = Object.assign({}, defaults, { meta }, data);
+  return mergedData
 }
 
 export default {}

@@ -44,6 +44,7 @@ export const category = () => select({
 
 export const pickyEater = () => yesnoradio({
   name: 'pickyEater',
+  id: 'pickyEater',
   label: 'Are You a Picky Eater?'
 })
 
@@ -151,7 +152,20 @@ const group = (name, updates) => {
 
 export const fruitQuestions = () => group("fruitQuestions", {
   if: '$get(category).value == "Fruits"',
-  children: [hidden(), pickyEater(), favoriteFruit(), foodSource()]
+  children: [
+    hidden(),
+    pickyEater(),
+    favoriteFruit(),
+    foodSource(),
+    // Test dynamically adding schema as an input
+    {
+      $cmp: 'FormKitSchema',
+      if: '$get(pickyEater).value === "Yes"',
+      props: {
+        schema: '$loadDynamicSchema($form, $dynamicInput)'
+      }
+    },
+  ]
 })
 
 export const vegetableQuestions = () => group("vegetableQuestions", {
@@ -163,3 +177,13 @@ export const extraQuestions = () => group("extraQuestions", {
   if: '$get(category).value == "Vegetables"',
   children: [date()]
 })
+
+export const dynamicQuestion = () => yesnoradio({
+  name: 'dynamic',
+  label: 'Dynamic Question Ay?'
+})
+
+export const dynamicQuestions = () => group("dynamicQuestions", {
+  children: [dynamicQuestion()]
+})
+
