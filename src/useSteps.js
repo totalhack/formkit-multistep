@@ -173,6 +173,9 @@ export default function useSteps() {
       setTimeout(function () {
         try {
           const newNode = steps[activeStep.value].node
+          if (typeof newNode.props.attrs.autoFocus !== 'undefined' && newNode.props.attrs.autoFocus === false) {
+            return
+          }
           const firstInput = findFirstInput(newNode)
           if (firstInput && autoFocusTypes.indexOf(firstInput.context.type) > -1) {
             const elem = document.getElementById(firstInput.context.id)

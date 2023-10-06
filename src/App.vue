@@ -163,7 +163,9 @@ const schema = [
               data: buildData([meta], data)
             }
           },
-          subcategory(),
+          subcategory({
+            autoFocus: false
+          }),
           extra(),
           contactInfo(),
           formNavigation(),
