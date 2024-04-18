@@ -115,8 +115,23 @@ export default function useSteps() {
   }
 
   const getNextStepsFromMap = (node, nextStepMap) => {
-    return keyValOverlap(node.value, nextStepMap)
-  }
+    const valueMap = nextStepMap.values
+    const prependSteps = nextStepMap.prependSteps || []
+    const appendSteps = nextStepMap.appendSteps || []
+
+    // node.value is the step node value which could be a map of multiple
+    // input names to values. We pass 'true' for the unique param so we ensure
+    // there are no dupes in the result.
+    const mappedSteps = keyValOverlap(node.value, valueMap, true, nextStepMap.matchesAllowed) || []
+
+    let nextSteps = [...prependSteps, ...mappedSteps, ...appendSteps]
+
+    // Ensure no duplicate steps in case the stepQueue already had the same!
+    if (Array.isArray(nextSteps)) {
+      nextSteps = [...new Set(nextSteps)];
+    }
+    return nextSteps
+  };
 
   const setStep = ({ nextStep = 1, validate = true, autoFocus = true, preStep = null } = {}) => {
     const node = steps[activeStep.value].node

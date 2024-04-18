@@ -21,6 +21,7 @@ function step(name, inputs, ...args) {
           $formkit: 'group',
           id: name,
           name: name,
+          key: name,
           children: inputs
         }, ...args)
       ]

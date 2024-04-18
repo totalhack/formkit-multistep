@@ -119,7 +119,7 @@ export const getKey = (d, path, def) => {
 }
 
 // Helper to map an input object key/val over a value map
-export const keyValOverlap = (o1, o2) => {
+export const keyValOverlap = (o1, o2, unique = false, matchesAllowed = 1) => {
   let result = null;
 
   for (var key of Object.keys(o2)) {
@@ -131,9 +131,27 @@ export const keyValOverlap = (o1, o2) => {
       continue
     }
 
-    if (o2[key][o1_value]) {
-      result = o2[key][o1_value];
-      break
+    // if o1_value is a list, we loop through it up until matchesAllowed
+    if (Array.isArray(o1_value)) {
+      let matches = 0;
+      for (var sub_key of Object.keys(o2[key])) {
+        if (o1_value.includes(sub_key)) {
+          if (result) {
+            result.push(...o2[key][sub_key]);
+          } else {
+            result = o2[key][sub_key];
+          }
+          matches++;
+          if (matches === matchesAllowed) {
+            break;
+          }
+        }
+      }
+    } else {
+      if (o2[key][o1_value]) {
+        result = o2[key][o1_value];
+        break;
+      }
     }
   }
 
@@ -142,6 +160,10 @@ export const keyValOverlap = (o1, o2) => {
       return o2['*'] // '*' is special placeholder for defaults
     }
     throw Error('result not found and no default specified')
+  }
+
+  if (unique && Array.isArray(result)) {
+    result = [...new Set(result)];
   }
   return result
 }

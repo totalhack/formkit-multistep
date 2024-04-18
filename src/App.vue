@@ -148,11 +148,14 @@ const schema = [
         children: [
           categoryAndZip({
             nextStepMap: {
-              'category': {
-                'Vegetables': ['dynamic', 'subcategory', 'extra', 'contactInfo'],
-                'Neither': ['contactInfo'],
+              values: {
+                'category': {
+                  'Vegetables': ['dynamic', 'extra'],
+                  'Neither': [],
+                },
+                '*': ['subcategory']
               },
-              '*': ['subcategory', 'contactInfo']
+              appendSteps: ['contactInfo']
             }
           }),
           {
@@ -166,7 +169,19 @@ const schema = [
           subcategory({
             autoFocus: false
           }),
-          extra(),
+          extra({
+            nextStepMap: {
+              values: {
+                'extraQuestions.multiCheck': {
+                  'Option 1': ['subcategory'],
+                  'Option 2': ['subcategory'],
+                },
+                '*': [],
+              },
+              matchesAllowed: 2,
+              appendSteps: ['contactInfo']
+            }
+          }),
           contactInfo(),
           formNavigation(),
           formDetails(),

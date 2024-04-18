@@ -135,6 +135,18 @@ export const hidden = () => ({
   value: null
 })
 
+export const multiCheck = () => ({
+  $formkit: 'checkbox',
+  label: 'Here is a multi-select check box',
+  name: 'multiCheck',
+  validation: 'required',
+  options: [
+    'Option 1',
+    'Option 2',
+    'Option 3'
+  ]
+})
+
 // ------ Question Groups
 
 // NOTE: name must be unique!
@@ -175,7 +187,7 @@ export const vegetableQuestions = () => group("vegetableQuestions", {
 
 export const extraQuestions = () => group("extraQuestions", {
   if: '$get(category).value == "Vegetables"',
-  children: [date()]
+  children: [date(), multiCheck()]
 })
 
 export const dynamicQuestion = () => yesnoradio({
