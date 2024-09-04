@@ -87,7 +87,7 @@ const dataDefaultsBase = {
       if (!(prepData instanceof Function)) {
         throw 'prepData must be a function'
       }
-      formData = prepData(formData)
+      formData = prepData(formData, node)
     }
 
     let abort = false;
