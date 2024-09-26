@@ -5,6 +5,7 @@
 <script setup>
 import { reactive, onMounted } from "vue"
 import { getNode } from "@formkit/core"
+import { dbg } from "../utils.js"
 
 const props = defineProps({
   data: Object,
@@ -34,7 +35,7 @@ onMounted(() => {
             continue
           }
         }
-
+        dbg("Setting data layer value for:", node.name, value)
         node.input(value)
       }
     }
@@ -136,40 +137,40 @@ const dataDefaultsBase = {
   },
   submit:
     (postUrl, prepData = null, redirect = null, contentType = "application/json") =>
-      async (formData, node) => {
-        if (prepData && prepData != "null") {
-          if (!(prepData instanceof Function)) {
-            throw "prepData must be a function"
-          }
-          formData = prepData(formData, node)
+    async (formData, node) => {
+      if (prepData && prepData != "null") {
+        if (!(prepData instanceof Function)) {
+          throw "prepData must be a function"
         }
+        formData = prepData(formData, node)
+      }
 
-        let abort = false
-        try {
-          const res = await postData(postUrl, formData, contentType)
-          node.clearErrors()
-        } catch (err) {
-          console.error(err)
-          abort = handleSubmitError(err, node)
-        }
+      let abort = false
+      try {
+        const res = await postData(postUrl, formData, contentType)
+        node.clearErrors()
+      } catch (err) {
+        console.error(err)
+        abort = handleSubmitError(err, node)
+      }
 
-        if (abort) {
-          return
-        }
+      if (abort) {
+        return
+      }
 
-        if (typeof redirect === "string" && redirect !== "null") {
-          if (formData) {
-            redirect = strSubUrl(redirect, formData)
-          }
-          redirectTo(redirect)
-          // Keep spinner active longer while we redirect
-          await sleep(2000)
-        } else if (redirect) {
-          // Assume it's a function that handles the redirect
-          redirect(formData, node)
-          await sleep(2000)
+      if (typeof redirect === "string" && redirect !== "null") {
+        if (formData) {
+          redirect = strSubUrl(redirect, formData)
         }
-      },
+        redirectTo(redirect)
+        // Keep spinner active longer while we redirect
+        await sleep(2000)
+      } else if (redirect) {
+        // Assume it's a function that handles the redirect
+        redirect(formData, node)
+        await sleep(2000)
+      }
+    },
   stringify: (value) => JSON.stringify(value, null, 2),
 }
 
