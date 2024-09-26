@@ -3,11 +3,15 @@
 </template>
 
 <script setup>
-import { FormKitMultiStep, buildData, getRedirect, redirectTo, openNewTab } from './components/';
-import { categoryAndZip, subcategory, extra, dynamic, contactInfo, formNavigation, formDetails } from './steps.js'
-import { dynamicQuestion } from './inputs.js'
+import { FormKitMultiStep, buildData, getRedirect, redirectTo, openNewTab } from "./components/"
+import { categoryAndZip, subcategory, extra, dynamic, contactInfo, formNavigation, formDetails } from "./steps.js"
+import { dynamicQuestion } from "./inputs.js"
 
-let dynamicSchemaLoaded = false;
+let dynamicSchemaLoaded = false
+
+window.FKMSDataLayer = window.FKMSDataLayer || []
+// Invalid value for a select, should not make it in
+window.FKMSDataLayer.push({ category: "Test" })
 
 const flattenObj = (obj) => {
   const flattened = {}
@@ -15,7 +19,7 @@ const flattenObj = (obj) => {
   Object.keys(obj).forEach((key) => {
     const value = obj[key]
 
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
       Object.assign(flattened, flattenObj(value))
     } else {
       flattened[key] = value
@@ -35,23 +39,23 @@ const data = {
     fromURL: true,
     values: {
       zip_code: "12345",
-    }
+    },
   },
   nextStepCallback: (stepResult, stepHistory, stepQueue) => {
-    console.log('nextStepCallback:', stepResult, stepHistory.value, stepQueue.value)
+    console.log("nextStepCallback:", stepResult, stepHistory.value, stepQueue.value)
   },
   preStepFunc: (stepNode) => {
-    console.log('preStepFunc:', stepNode)
+    console.log("preStepFunc:", stepNode)
     // return ['contactInfo'];
   },
   handleRedirectNewTab: (formData, node) => {
     var redirectUrl = getRedirect(formData, node)
-    if (redirectUrl && redirectUrl !== 'null') {
+    if (redirectUrl && redirectUrl !== "null") {
       const res = openNewTab(redirectUrl)
       if (res !== null) {
-        redirectTo('https://www.google.com?oldtab=1')
+        redirectTo("https://www.google.com?oldtab=1")
       } else {
-        console.warn('new tab failed')
+        console.warn("new tab failed")
         redirectTo(redirectUrl)
       }
     }
@@ -60,32 +64,32 @@ const data = {
   dynamicInput: dynamicQuestion(),
   loadDynamicSchema: (form, schema) => {
     if (dynamicSchemaLoaded) {
-      console.warn('Dynamic schema already loaded')
+      console.warn("Dynamic schema already loaded")
       // Note: this would be used to avoid reloaded a remote schema
       return schema
     }
-    console.log('Load dynamic schema', JSON.stringify(schema, null, 2))
+    console.log("Load dynamic schema", JSON.stringify(schema, null, 2))
     dynamicSchemaLoaded = true
     return schema
   },
 }
 
 const meta = {
-  type: 'meta',
+  type: "meta",
   data: {
     someTestField: "Hey you can access this elsewhere as $meta.someTestField",
-    subheadline: "Custom meta subheadline!"
-  }
+    subheadline: "Custom meta subheadline!",
+  },
 }
 
 const schema = [
   meta,
   {
-    $cmp: 'FormKit',
+    $cmp: "FormKit",
     props: {
-      type: 'form',
-      id: 'form',
-      config: { validationVisibility: 'submit' },
+      type: "form",
+      id: "form",
+      config: { validationVisibility: "blur" },
       // onSubmit: '$mySubmit',
       // onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectNewTab)',
       onSubmit: '$submit("https://httpbin.org/post", $flattenObj, $handleRedirectMap, "text/plain; charset=UTF-8")',
@@ -97,9 +101,9 @@ const schema = [
       // onSubmit: '$submit("https://httpbin.org/status/429", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/500", $flattenObj, "https://www.google.com?x=${subid}")',
       // onSubmit: '$submit("https://httpbin.org/status/504", $flattenObj, "https://www.google.com?x=${subid}")',
-      plugins: '$plugins',
+      plugins: "$plugins",
       actions: false,
-      prepop: '$prepop',
+      prepop: "$prepop",
       errorCodes: {
         403: { message: "An Error Occurred - Forbidden", abort: false },
         409: { abort: false },
@@ -109,86 +113,86 @@ const schema = [
       inputMap: {
         // Can be used to dynamically control inputs by some key
         // Ex: if: '$inputEnabled($get(form), $get(category).value, "favoriteVegetable")',
-        'Fruits': ['favoriteFruit'],
-        'Vegetables': ['favoriteVegetable']
+        Fruits: ["favoriteFruit"],
+        Vegetables: ["favoriteVegetable"],
       },
       redirectMap: {
-        'category': {
-          'Neither': 'https://www.google.com?x=${subid}&y=1',
-          'Vegetables': 'https://www.google.com?x=${subid}&y=2',
+        category: {
+          Neither: "https://www.google.com?x=${subid}&y=1",
+          Vegetables: "https://www.google.com?x=${subid}&y=2",
         },
-        '*': null
-      }
+        "*": null,
+      },
     },
     children: [
       {
-        $el: 'h1',
+        $el: "h1",
         children: '$urlParam("pitch", "Need Help") + "? Start Here!"',
         attrs: {
-          class: 'text-center text-3xl font-bold'
-        }
+          class: "text-center text-3xl font-bold",
+        },
       },
       {
-        $el: 'h3',
+        $el: "h3",
         children: '$getKey($meta, "subheadline", "Get Your Questions Answered Today!")',
         attrs: {
-          class: 'text-center text-l font-bold text-blue-500'
-        }
+          class: "text-center text-l font-bold text-blue-500",
+        },
       },
       {
-        $formkit: 'hidden',
+        $formkit: "hidden",
         name: "subid",
-        value: "1234"
+        value: "1234",
       },
       {
-        $el: 'div',
+        $el: "div",
         attrs: {
-          class: 'form-body',
+          class: "form-body",
         },
         children: [
           categoryAndZip({
             nextStepMap: {
               values: {
-                'category': {
-                  'Vegetables': ['dynamic', 'extra'],
-                  'Neither': [],
+                category: {
+                  Vegetables: ["dynamic", "extra"],
+                  Neither: [],
                 },
-                '*': ['subcategory']
+                "*": ["subcategory"],
               },
-              appendSteps: ['contactInfo']
-            }
+              appendSteps: ["contactInfo"],
+            },
           }),
           {
-            $cmp: 'FormKitSchema',
+            $cmp: "FormKitSchema",
             if: '$get(category).value === "Vegetables"',
             props: {
-              schema: '$loadDynamicSchema($form, $dynamicStep)',
-              data: buildData([meta], data)
-            }
+              schema: "$loadDynamicSchema($form, $dynamicStep)",
+              data: buildData([meta], data),
+            },
           },
           subcategory({
-            autoFocus: false
+            autoFocus: false,
           }),
           extra({
             nextStepMap: {
               values: {
-                'extraQuestions.multiCheck': {
-                  'Option 1': ['subcategory'],
-                  'Option 2': ['subcategory'],
+                "extraQuestions.multiCheck": {
+                  "Option 1": ["subcategory"],
+                  "Option 2": ["subcategory"],
                 },
-                '*': [],
+                "*": [],
               },
               matchesAllowed: 2,
-              appendSteps: ['contactInfo']
-            }
+              appendSteps: ["contactInfo"],
+            },
           }),
           contactInfo(),
           formNavigation(),
           formDetails(),
-        ]
+        ],
       },
-    ]
-  }
+    ],
+  },
 ]
-console.log("Schema:", JSON.stringify(schema, null, 2))
+// console.log("Schema:", JSON.stringify(schema, null, 2))
 </script>
