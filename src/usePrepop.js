@@ -1,8 +1,8 @@
-import { dbg } from "./utils.js"
+import { dbg, globalObj } from "./utils.js"
 
 export default function usePrepop() {
   let prepopSettings = {}
-  const urlParams = new URLSearchParams(globalThis.location.search)
+  const urlParams = new URLSearchParams(globalObj.location.search)
 
   const prepopPlugin = (node) => {
     if (node.props.type == "form") {

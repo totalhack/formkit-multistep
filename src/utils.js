@@ -1,5 +1,6 @@
-const urlParams = new URLSearchParams(window.location.search);
-const DEBUG = urlParams.get('fdbg')
+export const globalObj = typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : {}
+const urlParams = new URLSearchParams(globalObj.location.search)
+export const DEBUG = urlParams.get("fdbg")
 
 export function dbg() {
   if (DEBUG != 1) return
@@ -7,7 +8,7 @@ export function dbg() {
 }
 
 export const sleep = async (time) => {
-  return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time))
 }
 
 export const getCoords = (elem) => {
@@ -16,27 +17,27 @@ export const getCoords = (elem) => {
     top: box.top + window.pageYOffset,
     right: box.right + window.pageXOffset,
     bottom: box.bottom + window.pageYOffset,
-    left: box.left + window.pageXOffset
+    left: box.left + window.pageXOffset,
   }
 }
 
-export const postData = async (url, data, contentType = 'application/json') => {
+export const postData = async (url, data, contentType = "application/json") => {
   dbg("Post to: " + url)
   const raw = await fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': contentType
+      Accept: "application/json",
+      "Content-Type": contentType,
     },
-    body: JSON.stringify(data)
-  });
+    body: JSON.stringify(data),
+  })
   if (!raw.ok) {
-    let error = new Error(raw.statusText);
+    let error = new Error(raw.statusText)
     Object.assign(error, { response: raw })
     throw error
   }
-  const res = await raw.json();
-  dbg("Post resp: " + JSON.stringify(res, null, 2));
+  const res = await raw.json()
+  dbg("Post resp: " + JSON.stringify(res, null, 2))
   return res
 }
 
@@ -50,7 +51,7 @@ export const openNewTab = (url) => {
   if (otherTab !== null) {
     // Note: doesn't block referrer
     otherTab.opener = null
-    otherTab.target = '_blank'
+    otherTab.target = "_blank"
     otherTab.location = url
   }
   return otherTab
@@ -73,7 +74,7 @@ export const setNodeError = (node, message) => {
   node.setErrors(message)
   clearErrorTimeout = setTimeout(() => {
     node.store.filter((m) => {
-      return m.type !== 'error'
+      return m.type !== "error"
     })
   }, 5000)
 }
@@ -81,19 +82,19 @@ export const setNodeError = (node, message) => {
 export const handleSubmitError = (err, node) => {
   clearTimeout(clearErrorTimeout)
   if (err.response) {
-    const code = err.response.status;
+    const code = err.response.status
     if (node.props.attrs.errorCodes && code in node.props.attrs.errorCodes) {
       const value = node.props.attrs.errorCodes[code]
       let message = null
       let abort = true
 
-      if (typeof (value) === 'string') {
+      if (typeof value === "string") {
         message = value
       } else {
-        if ('message' in value) {
+        if ("message" in value) {
           message = value.message
         }
-        if ('abort' in value) {
+        if ("abort" in value) {
           abort = value.abort
         }
       }
@@ -109,10 +110,10 @@ export const handleSubmitError = (err, node) => {
 }
 
 export const getKey = (d, path, def) => {
-  if (typeof (path) === 'string') {
-    path = path.split('.')
+  if (typeof path === "string") {
+    path = path.split(".")
   }
-  if (typeof def !== 'undefined') {
+  if (typeof def !== "undefined") {
     return path.reduce((x, y) => x[y] || def, d)
   }
   return path.reduce((x, y) => x[y], d)
@@ -120,10 +121,10 @@ export const getKey = (d, path, def) => {
 
 // Helper to map an input object key/val over a value map
 export const keyValOverlap = (o1, o2, unique = false, matchesAllowed = 1) => {
-  let result = null;
+  let result = null
 
   for (var key of Object.keys(o2)) {
-    if (key === '*') {
+    if (key === "*") {
       continue
     }
     const o1_value = getKey(o1, key)
@@ -133,44 +134,45 @@ export const keyValOverlap = (o1, o2, unique = false, matchesAllowed = 1) => {
 
     // if o1_value is a list, we loop through it up until matchesAllowed
     if (Array.isArray(o1_value)) {
-      let matches = 0;
+      let matches = 0
       for (var sub_key of Object.keys(o2[key])) {
         if (o1_value.includes(sub_key)) {
           if (result) {
-            result.push(...o2[key][sub_key]);
+            result.push(...o2[key][sub_key])
           } else {
-            result = o2[key][sub_key];
+            result = o2[key][sub_key]
           }
-          matches++;
+          matches++
           if (matches === matchesAllowed) {
-            break;
+            break
           }
         }
       }
     } else {
       if (o2[key][o1_value]) {
-        result = o2[key][o1_value];
-        break;
+        result = o2[key][o1_value]
+        break
       }
     }
   }
 
   if (result === null) {
-    if ('*' in o2) {
-      return o2['*'] // '*' is special placeholder for defaults
+    if ("*" in o2) {
+      return o2["*"] // '*' is special placeholder for defaults
     }
-    throw Error('result not found and no default specified')
+    throw Error("result not found and no default specified")
   }
 
   if (unique && Array.isArray(result)) {
-    result = [...new Set(result)];
+    result = [...new Set(result)]
   }
   return result
 }
 
-export const strSub = (str, obj, d = "") => str.replace(/\${(.*?)}/g, (x, g) => getKey(obj, g) || d);
+export const strSub = (str, obj, d = "") => str.replace(/\${(.*?)}/g, (x, g) => getKey(obj, g) || d)
 
-export const strSubUrl = (str, obj, d = "") => str.replace(/\${(.*?)}/g, (x, g) => encodeURIComponent(getKey(obj, g) || d));
+export const strSubUrl = (str, obj, d = "") =>
+  str.replace(/\${(.*?)}/g, (x, g) => encodeURIComponent(getKey(obj, g) || d))
 
 export function merge() {
   return Object.assign({}, ...arguments)

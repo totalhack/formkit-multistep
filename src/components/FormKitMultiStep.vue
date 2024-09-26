@@ -5,7 +5,7 @@
 <script setup>
 import { reactive, onMounted } from "vue"
 import { getNode } from "@formkit/core"
-import { dbg } from "../utils.js"
+import { dbg, globalObj } from "../utils.js"
 
 const props = defineProps({
   data: Object,
@@ -16,7 +16,7 @@ const mergedData = reactive(buildData(props.schema, props.data, dataDefaults))
 
 onMounted(() => {
   // NOTE: only a single form per page is supported!
-  globalThis.FKMSDataLayer = globalThis.FKMSDataLayer || []
+  globalObj.FKMSDataLayer = globalObj.FKMSDataLayer || []
 
   function processData(data) {
     for (const key in data) {
@@ -41,17 +41,17 @@ onMounted(() => {
     }
   }
 
-  for (let i = 0; i < globalThis.FKMSDataLayer.length; i++) {
-    const update = globalThis.FKMSDataLayer[i]
+  for (let i = 0; i < globalObj.FKMSDataLayer.length; i++) {
+    const update = globalObj.FKMSDataLayer[i]
     processData(update)
   }
 
-  const originalPush = globalThis.FKMSDataLayer.push
-  globalThis.FKMSDataLayer.push = function (...args) {
+  const originalPush = globalObj.FKMSDataLayer.push
+  globalObj.FKMSDataLayer.push = function (...args) {
     for (const update of args) {
       processData(update)
     }
-    return originalPush.apply(globalThis.FKMSDataLayer, args)
+    return originalPush.apply(globalObj.FKMSDataLayer, args)
   }
 })
 </script>
@@ -77,7 +77,7 @@ let {
   setPreviousStep,
 } = useSteps()
 
-const urlParams = new URLSearchParams(globalThis.location.search)
+const urlParams = new URLSearchParams(globalObj.location.search)
 
 const dataDefaultsBase = {
   activeStep,
