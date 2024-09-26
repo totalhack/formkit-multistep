@@ -16,7 +16,7 @@ const mergedData = reactive(buildData(props.schema, props.data, dataDefaults))
 
 onMounted(() => {
   // NOTE: only a single form per page is supported!
-  window.FKMSDataLayer = window.FKMSDataLayer || []
+  globalThis.FKMSDataLayer = globalThis.FKMSDataLayer || []
 
   function processData(data) {
     for (const key in data) {
@@ -41,17 +41,17 @@ onMounted(() => {
     }
   }
 
-  for (let i = 0; i < window.FKMSDataLayer.length; i++) {
-    const update = window.FKMSDataLayer[i]
+  for (let i = 0; i < globalThis.FKMSDataLayer.length; i++) {
+    const update = globalThis.FKMSDataLayer[i]
     processData(update)
   }
 
-  const originalPush = window.FKMSDataLayer.push
-  window.FKMSDataLayer.push = function (...args) {
+  const originalPush = globalThis.FKMSDataLayer.push
+  globalThis.FKMSDataLayer.push = function (...args) {
     for (const update of args) {
       processData(update)
     }
-    return originalPush.apply(window.FKMSDataLayer, args)
+    return originalPush.apply(globalThis.FKMSDataLayer, args)
   }
 })
 </script>
@@ -76,7 +76,8 @@ let {
   setNextStep,
   setPreviousStep,
 } = useSteps()
-const urlParams = new URLSearchParams(window.location.search)
+
+const urlParams = new URLSearchParams(globalThis.location.search)
 
 const dataDefaultsBase = {
   activeStep,
