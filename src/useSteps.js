@@ -1,22 +1,13 @@
-import { reactive, toRef, ref } from 'vue'
-import { createMessage } from '@formkit/core'
-import { keyValOverlap, getCoords } from './utils.js'
+import { reactive, toRef, ref } from "vue"
+import { createMessage } from "@formkit/core"
+import { keyValOverlap, getCoords } from "./utils.js"
 
-const autoFocusTypes = [
-  "email",
-  "number",
-  "password",
-  "search",
-  "text",
-  "textarea",
-  "tel",
-  "url"
-]
+const autoFocusTypes = ["email", "number", "password", "search", "text", "textarea", "tel", "url", "FloatingLabelText"]
 
 export default function useSteps() {
-  const activeStep = ref('')
+  const activeStep = ref("")
   const steps = reactive({})
-  let defaultOrder = [];
+  let defaultOrder = []
   let stepQueue = ref([])
   let stepHistory = ref([])
 
@@ -27,7 +18,7 @@ export default function useSteps() {
   const findFirstInput = (n) => {
     for (var i = 0; i < n.children.length; i++) {
       const child = n.children[i]
-      if ((child.type === 'input' || child.type === 'list') && !(child.context.type === 'hidden')) {
+      if ((child.type === "input" || child.type === "list") && !(child.context.type === "hidden")) {
         return child
       }
       const res = findFirstInput(child)
@@ -46,11 +37,11 @@ export default function useSteps() {
     if (el) {
       // Align temp input element approximately where the input element is
       // so the cursor doesn't jump around
-      var __tempEl__ = document.createElement('input')
+      var __tempEl__ = document.createElement("input")
       var coords = getCoords(el)
-      __tempEl__.style.position = 'absolute'
-      __tempEl__.style.top = (coords.top + 7) + 'px'
-      __tempEl__.style.left = coords.left + 'px'
+      __tempEl__.style.position = "absolute"
+      __tempEl__.style.top = coords.top + 7 + "px"
+      __tempEl__.style.left = coords.left + "px"
       __tempEl__.style.height = 0
       __tempEl__.style.opacity = 0
       // Put this temp element as a child of the page <body> and focus on it
@@ -110,7 +101,7 @@ export default function useSteps() {
       queueStep(undone, true)
       activeStep.value = undone
     } else {
-      throw Error('Invalid stepCount: ' + JSON.stringify(stepCount))
+      throw Error("Invalid stepCount: " + JSON.stringify(stepCount))
     }
   }
 
@@ -128,10 +119,10 @@ export default function useSteps() {
 
     // Ensure no duplicate steps in case the stepQueue already had the same!
     if (Array.isArray(nextSteps)) {
-      nextSteps = [...new Set(nextSteps)];
+      nextSteps = [...new Set(nextSteps)]
     }
     return nextSteps
-  };
+  }
 
   const setStep = ({ nextStep = 1, validate = true, autoFocus = true, preStep = null } = {}) => {
     const node = steps[activeStep.value].node
@@ -140,14 +131,14 @@ export default function useSteps() {
       node.walk((n) => {
         n.store.set(
           createMessage({
-            key: 'submitted',
+            key: "submitted",
             value: true,
-            visible: false
+            visible: false,
           })
         )
       })
       if (!node.context) {
-        console.warn('No context found for node:', node)
+        console.warn("No context found for node:", node)
         return false
       }
       if (!node.context.state.valid) {
@@ -155,7 +146,7 @@ export default function useSteps() {
       }
     }
 
-    var nextStepsOverride;
+    var nextStepsOverride
     if (preStep) {
       // Next steps can optionally be overridden by a preStep function or
       // the nextStepMap below.
@@ -177,7 +168,7 @@ export default function useSteps() {
       return true
     }
 
-    if (typeof (nextStep) === 'number') {
+    if (typeof nextStep === "number") {
       advanceStep(nextStep)
     } else {
       throw Error("Unexpected value for nextStep: " + nextStep)
@@ -188,7 +179,7 @@ export default function useSteps() {
       setTimeout(function () {
         try {
           const newNode = steps[activeStep.value].node
-          if (typeof newNode.props.attrs.autoFocus !== 'undefined' && newNode.props.attrs.autoFocus === false) {
+          if (typeof newNode.props.attrs.autoFocus !== "undefined" && newNode.props.attrs.autoFocus === false) {
             return
           }
           const firstInput = findFirstInput(newNode)
@@ -197,7 +188,7 @@ export default function useSteps() {
             focusAndOpenKeyboard(elem)
           }
         } catch (e) {
-          console.warn('Failed to autoFocus:', e)
+          console.warn("Failed to autoFocus:", e)
         }
       }, 50)
     }
@@ -227,9 +218,9 @@ export default function useSteps() {
         defaultOrder.push(...node.props.attrs.defaultOrder)
       }
 
-      node.on('child', ({ payload: childNode }) => {
+      node.on("child", ({ payload: childNode }) => {
         // All 'group' children are assumed to be a step
-        if (childNode.type === 'group') {
+        if (childNode.type === "group") {
           if (defaultOrder.length > 0) {
             if (Object.keys(steps).length === 0) {
               setStepQueue(defaultOrder)
@@ -242,32 +233,46 @@ export default function useSteps() {
 
           // builds an object of the top-level groups
           steps[childNode.name] = {}
-          steps[childNode.name].node = childNode;
+          steps[childNode.name].node = childNode
 
           // use 'on created' to ensure context object is available
-          childNode.on('created', () => {
-            steps[childNode.name].valid = toRef(childNode.context.state, 'valid')
+          childNode.on("created", () => {
+            steps[childNode.name].valid = toRef(childNode.context.state, "valid")
           })
 
-          childNode.on('count:errors', ({ payload: count }) => {
+          childNode.on("count:errors", ({ payload: count }) => {
             steps[childNode.name].errorCount = count
           })
 
           // listen for changes in count of blocking validations messages
-          childNode.on('count:blocking', ({ payload: count }) => {
+          childNode.on("count:blocking", ({ payload: count }) => {
             steps[childNode.name].blockingCount = count
           })
 
           // set the active tab to the 1st tab
-          if (activeStep.value === '') {
+          if (activeStep.value === "") {
             activeStep.value = childNode.name
           }
         }
       })
       return true
     }
-
   }
 
-  return { stepPlugin, steps, stepHistory, stepQueue, enabledSteps, stepEnabled, defaultOrder, activeStep, firstStep, lastStep, setStep, setStepQueue, setNextStep, setPreviousStep }
+  return {
+    stepPlugin,
+    steps,
+    stepHistory,
+    stepQueue,
+    enabledSteps,
+    stepEnabled,
+    defaultOrder,
+    activeStep,
+    firstStep,
+    lastStep,
+    setStep,
+    setStepQueue,
+    setNextStep,
+    setPreviousStep,
+  }
 }
